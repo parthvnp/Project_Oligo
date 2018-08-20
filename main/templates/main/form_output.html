@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% block static_files %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+    {% endblock static_files %}
+    
+    <title>
+        {% block title %}
+        Document
+        {% endblock title %}
+    </title>
+</head>
+<body>
+    {% block content %}
+    <pre>
+        {{output}}
+    </pre>
+    <p>
+        {% for sequence in output  %}
+        <div class="colored-output">
+                <p class="preserve-space multi-line-padded {% cycle 'color-1' 'color-2' 'color-3' 'color-4' %}">{{sequence}}</p>
+
+        </div>
+        
+        {% endfor %}
+    </p>
+    {% endblock content %}
+   
+</body>
+</html>

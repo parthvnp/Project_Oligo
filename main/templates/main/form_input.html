@@ -1,0 +1,98 @@
+{% extends "base.html" %} {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"> {% block static_files %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}"> {% endblock static_files %}
+    <title>
+        {% block title %} PyOligo - form {% endblock title %}
+    </title>
+</head>
+
+<body>
+    {% block content %}
+    <form action="{% url 'main:output'  %}" method="POST">
+        {% csrf_token %}
+
+    <div class="columns">
+        <div class="is-6 column is-offset-2">
+            <div class="field">
+                <p class="control">
+                    <label for="sequence_name"> Sequence Name </label>
+                </p>
+                <p class="control is-expanded">
+                    {{form.sequence_name}}
+                </p>
+                <p class="control">
+                    <label for="sequence"> Sequence </label>
+                </p>
+                <p class="control is-expanded">
+                    {{form.sequence}}
+                </p>
+            </div>
+        </div>
+
+        <div class="column is-2">
+            <div class="field">
+                <p class="control is-expanded">
+                    <label for="max_Lenght"> Maximum Length </label>
+                </p>
+                <p class="control">
+                    <div class="select is-fullwidth">
+                        {{form.max_Length}}
+                    </div>
+                </p>
+            </div>
+                <div class="control">
+                    <label for="melt_Tm">Melt Temperature</label>
+                </div>
+            <div class="field has-addons">
+                    <p class="control">
+                        {{form.melt_Tm}}
+                    </p>
+                    <p class="control">
+                        <a class="button is-info is-static">
+                            Celsius
+                        </a>
+                    </p>
+                </div>
+            <div class="field">
+                <p class="control">
+                    <label for="algorithm"> Algorithm </label>
+                </p>
+                <div class="control is-expanded">
+                    <div class="select is-fullwidth">
+                        {{form.algorithm}}
+                    </div>
+                </div>
+            </div>
+                
+        <div class="field">
+            <div class="control is-expanded">
+                <a class="button is-fullwidth is-danger">
+                        Clear Form 
+                </a>
+                
+            </div>
+            <div class="control is-expanded">
+                <input type="submit" class="button is-fullwidth is-primary" >
+            </div>
+
+            <div class="control is-expanded">
+                <a class="button is-link is-fullwidth"> Show Demo</a>
+            </div>
+           
+        </div>
+        </div>
+    </div>
+</form>
+    {% endblock content %}
+</body>
+
+</html>

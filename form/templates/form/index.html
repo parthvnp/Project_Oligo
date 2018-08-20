@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% block static_files %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'form/css/style.css' %}">
+    {% endblock static_files %}
+    <title>
+        {% block title %}
+        PyOligo-Home Page
+        {% endblock title %}
+    </title>
+</head>
+<body>
+    {% block content %}
+    <div class="mainForm field">
+            <div class="columns">
+                <div class="column is-8 is-centered is-offset-2 mainContent">
+                    <article class="message is-info">
+                        <div class="message-header">
+                                PyOligo
+                    
+                        </div>
+                        <div class="message-body">
+                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore repellendus quidem vel hic error tenetur libero sit obcaecati! Voluptate molestias tempora totam voluptatibus quae id blanditiis quisquam accusamus accusantium nihil. Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum eveniet ea pariatur? Impedit asperiores vitae dolorum harum sunt libero et? Facere alias facilis molestiae quia deleniti reiciendis odio omnis ratione. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptate, soluta! Iste saepe quidem autem perferendis reiciendis, cupiditate exercitationem quam veritatis illum, nesciunt architecto consequatur! Perspiciatis exercitationem itaque commodi! Ad, a. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Neque sunt officia labore blanditiis culpa laudantium eveniet dicta, necessitatibus id aut illum quisquam iusto nisi odit fugiat, optio pariatur eos. Non!
+                        </div>
+
+                    </article>
+                </div>
+            </div>
+
+            <div class="columns is-multiline">
+                <div class="column is-4 is-centered is-offset-2">
+                    <article class="message is-primary">
+                        <div class="message-header">Retrive Results</div>
+                        <div class="message-body">
+                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint ipsa reiciendis corrupti animi velit perspiciatis ex, esse neque molestiae vitae accusamus voluptatibus, autem est iste necessitatibus reprehenderit eius consequuntur cumque!
+                        </div>
+                    </article>
+                </div>
+                <div class="column is-4 is-centered">
+                        <article class="message is-primary">
+                            <div class="message-header">Contact Us</div>
+                            <div class="message-body">
+                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint ipsa reiciendis corrupti animi velit perspiciatis ex, esse neque molestiae vitae accusamus voluptatibus, autem est iste necessitatibus reprehenderit eius consequuntur cumque!
+                            </div>
+                        </article>
+                    </div>
+    
+
+            </div>
+        </div>
+    {% endblock content %}
+</body>
+</html>

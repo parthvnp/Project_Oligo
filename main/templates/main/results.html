@@ -1,0 +1,69 @@
+{% extends "base.html" %} {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"> {% block static_files %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}"> {% endblock static_files %}
+    <title>
+        {% block title %} PyOligo - Results {{result_id}} {% endblock title %}
+    </title>
+</head>
+
+<body>
+    {% block content %}
+    <div class="main-output">
+        <div class="column is-6 is-offset-2">
+                <div class="field">
+                        <div class="control content-tag">
+                                Result ID: {{result_id}}
+                        </div>
+                    </div>
+        </div>
+            
+        <div class="column is-8 is-offset-2">
+            <div class="sequence-container">
+                <div class="sequence-header">
+                    Assembly PCR Scheme
+                </div>
+            </div>
+            <div class="sequence-body">
+<pre class="preserve-space">
+<span class="color-1">{{output_oligos.0}}</span>
+<span class="color-2">{{output_oligos.1}}</span>
+<span class="color-3">{{output_oligos.2}}</span>
+<span class="color-4">{{output_oligos.3}}</span>
+
+</pre>
+
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <div class="sequence-header">
+                        Primer Dimer Formation
+                    </div>
+                    <div class="sequence-contianer">
+                        {% for dimer in primer_dimer  %}
+                        <pre class="preserve-space">
+                            {{dimer}}
+                        </pre>
+                        
+                        {% endfor %}
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+
+
+    {% endblock content %}
+</body>
+
+</html>

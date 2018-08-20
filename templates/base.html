@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% block static_files %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'form/css/style.css' %}">
+    {% endblock static_files %}
+    <title>
+        {% block title %}
+        
+        {% endblock title %}
+    </title>
+</head>
+
+<body>
+    <nav class="navbar is-link" role="navigation" aria-label="dropdown navigation">
+        <div class="container">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="#" style="font-weight:bold;">
+                    OurLogo
+                </a>
+                <span class="navbar-burger burger" data-target="navMenu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </div>
+            <div id="navMenu" class="navbar-menu">
+                <div class="navbar-end">
+                    <a href="#" class="navbar-item is-active">Home</a>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                            Docs
+                        </a>
+
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item">
+                                Overview
+                            </a>
+                            <a class="navbar-item">
+                                Elements
+                            </a>
+                            <a class="navbar-item">
+                                Components
+                            </a>
+                            <hr class="navbar-divider">
+                            <div class="navbar-item">
+                                Version 0.0.1
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="navbar-item">Contact</a>
+                    <a href="#" class="navbar-item">References</a>
+                    <a href="#" class="navbar-item">Demo</a>
+
+                </div>
+            </div>
+        </div>
+        </div>
+
+    </nav>
+
+    <script type="text/javascript">
+        (function () {
+            var burger = document.querySelector('.burger');
+            var nav = document.querySelector('#' + burger.dataset.target);
+            burger.addEventListener('click', function () {
+                burger.classList.toggle('is-active');
+                nav.classList.toggle('is-active');
+            });
+        })();
+    </script>
+
+    {% block content %} 
+    {% endblock content %} 
+    {% block footer %}
+     {% endblock footer %}
+</body>
+
+</html>
