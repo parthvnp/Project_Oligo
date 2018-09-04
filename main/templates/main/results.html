@@ -75,6 +75,7 @@
                                         <th>Length</th>
                                         <th>Melt Temperature (&deg;C) </th>
                                         <th>GC Content (%)</th>
+                                        <th>Consecutive GC </th>
                                     </tr>
                                 </thead>
                                     {% for oligo in output_oligos_profile %}
@@ -84,6 +85,7 @@
                                         <td> <span class="table-highlighter-6">{{oligo.2}}   </span></td>
                                         <td>   <span class="table-highlighter-6">{{oligo.3}}   </span></td>
                                         <td> <span class="table-highlighter-6">{{oligo.4}}   </span></td>
+                                        <td>  <span class="table-highlighter-6">{{oligo.5}}   </td>
                                     </tr>
                                     {% endfor %}
                             </table>

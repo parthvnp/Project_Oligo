@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
         crossorigin="anonymous">
+        <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+      </script>
     <link rel="stylesheet" href="{% static 'form/css/style.css'%}">
     {% endblock static_files %}
     <title>
@@ -28,46 +31,115 @@
             <br>
             <br>
             <br>
+            <br>
+            <br>
+            <div class="sequence-header">
+                    <span > <span><span class="icon is-small"><i class="fas fa-bars"> </i></span> </span> Sections </span>
+            </div>
                 <aside class="menu content-box-3">
+                    <p class="menu-label">
+                            <a href="#overview"> <button class="button color-5">PyOligo Overview </button></a> 
+                    </p>
                         <p class="menu-label">
-                          General
+                        <a href="#oligodesign"> <button class="button color-6">Oligo Design</button></a> 
+                         
                         </p>
-                        <ul class="menu-list">
-                          <li><a>Dashboard</a></li>
-                          <li><a>Customers</a></li>
-                        </ul>
+                        
                         <p class="menu-label">
-                          Administration
+                                <a href="#primerdimer"> <button class="button color-7">Primer Dimer </button></a> 
                         </p>
-                        <ul class="menu-list">
-                          <li><a>Team Settings</a></li>
-                          <li>
-                            <a class="is-active">Manage Your Team</a>
-                            <ul>
-                              <li><a>Members</a></li>
-                              <li><a>Plugins</a></li>
-                              <li><a>Add a member</a></li>
-                            </ul>
-                          </li>
-                          <li><a>Invitations</a></li>
-                          <li><a>Cloud Storage Environment Settings</a></li>
-                          <li><a>Authentication</a></li>
-                        </ul>
                         <p class="menu-label">
-                          Transactions
+                                <a href="#secondarystructure"> <button class="button color-8">Secondary Structure</button></a> 
                         </p>
-                        <ul class="menu-list">
-                          <li><a>Payments</a></li>
-                          <li><a>Transfers</a></li>
-                          <li><a>Balance</a></li>
-                        </ul>
+                        <p class="menu-label">
+                                <a href="#troubleshoot"> <button class="button color-9">Troubleshoot</button></a> 
+                        </p>
+                       
                       </aside>
         </div>
         <div class="column is-7 ">
-           <div class="field">
+            <br>
+            <br>
+            <br>
+           <div class="field" id="overview">
+               <div class="control">
+                   <span class="is-title-1"> <span><span class="icon is-small"><i class="fas fa-sitemap" ></i></span> </span>PyOligo Overview </span>
+               </div>
                <div class="control">
                    <div class="content-box">
+                    PyOligo is an online tool for designing oligos for Assembly PCR and analyzing their properties using the Nearest Neightbhor Thermodynamics model. Oligos designed for Assembly PCR must be secondary-structure and primer dimer free, and must have uniform melting temperature across hybridization regions and uniform length. To satisy these requirements, PyOligo first optimizes the length of oligos and minimizes gloabal deviations in melting temperature across the overlapping regions. Thereafter, the program  uses algorithmd to predict secondary structures and primer dimer  stability and warns the users when such structures might interfere with the PCR reaction. 
+                   </div>
+               </div>
+           </div>
+           <div class="field" id="oligodesign">
+               <div class="control">
+                    <span class="is-title-2"> <span><span class="icon is-small"><i class="fas fa-edit" ></i></span> </span>Oligo Design</span>
+               </div>
+               <div class="control">
+                   <div class="content-box">
+                       The main algorithm of PyOligo, Oligo Desigen, fragments the DNA sequence into uniform length oligos and optimizes their length to minimize the deivations in melting temperature of overlapping regions. By default, the program adjusts the length of oligos such that the melting temperature is within &pm;3&deg;C of provided average melt temperature. This gives the program some flexibility when adjusting the length of oligos to reduce variation in melting temperature across the hybridization regions. The program uses the following equation to calculate melting temperature of DNA sequences, where <math style="font-family:stix" xmlns="http://www.w3.org/1998/Math/MathML"><mstyle mathsize="24px"><mrow><mo>&#x2206;</mo><mi>H</mi><mo>&#xB0;</mo></mrow></mstyle></math> is enthalpy, <math style="font-family:stix" xmlns="http://www.w3.org/1998/Math/MathML"><mstyle mathsize="24px"><mrow><mo>&#x2206;</mo><mi>S</mi><mo>&#xB0;</mo></mrow></mstyle></math> is entropy, <math style="font-family:stix" xmlns="http://www.w3.org/1998/Math/MathML"><mstyle mathsize="24px"><mi>R</mi></mstyle></math> is gas constant and <math style="font-family:stix" xmlns="http://www.w3.org/1998/Math/MathML"><mstyle mathsize="24px"><msub><mi>C</mi><mi>T</mi></msub></mstyle></math> is concentration of oligo, provided that it is not self-complementary.
+                       <pre>
+                                 <math class="is-centered" style="font-family:stix" style="font-weight:bolder" xmlns="http://www.w3.org/1998/Math/MathML"><mstyle mathsize="24px"><mrow><msub><mi>T</mi><mi>m</mi></msub><mo>&#xA0;</mo><mo>=</mo><mo>&#xA0;</mo><mfrac><mrow><mo>&#x2206;</mo><mi>H</mi><mo>&#xB0;</mo></mrow><mrow><mo>&#x2206;</mo><mi>S</mi><mo>&#xB0;</mo><mo>&#xA0;</mo><mo>+</mo><mo>&#xA0;</mo><mi>R</mi><mo>&#xA0;</mo><mi>ln</mi><mo>&#xA0;</mo><msub><mi>C</mi><mi>T</mi></msub></mrow></mfrac></mrow></mstyle></math>
+                       </pre>
+                       
+                   </div>
+               </div>
+           </div>
+           <div class="field" id="primerdimer">
+               <div class="control">
+                    <span class="is-title-3"> <span><span class="icon is-small"><i class="fas fa-exchange-alt" ></i></span> </span>Primer Dimer</span>
+               </div>
+               <div class="control">
+                   <div class="content-box">
+                       Primer Dimers are stable structure that can form through unwanted overlap between oligos. In Assembly PCR, each oligo must stably and exclusively overlap with its adjacent overlap. When oligos form stable non-exclusive overlaps with oligos from other parts of the duplex, the availability of oligo in the PCR mixture decreases. Therefore, PyOligo checks for all primer dimer structures among the oligos and warns the user if a stable primer dimer structure is determined. These structures are displayed under the Primer Dimer tab in the output. The output also provides a score for each structure and its melting temperature. Primer dimers are scored based on the number of two or more consecutive base pairs in structure. If the program displays the oligos, it is likely that these primer dimer might interfere with the PCR reaction. These primer dimers can be possibly avoided if the maximum length of the oligo is decreased.
+                   </div>
+               </div>
+           </div>
 
+           <div class="field" id="secondarystructure">
+               <div class="control">
+                    <span class="is-title-4"> <span><span class="icon is-small"><i class="fas fa-random" ></i></span> </span>Secondary Structure </span>
+               </div>
+               <div class="content-box">
+                Oligos can form stable secondary structures through self-hybridization. These stable DNA secondary structures can interfere with PCR reaction by lowering the availability of oligos. Therefore, it is important to identify the presence of these structures in oligos. To determine the presence of these structures, PyOligo uses Zuker's Minimum Free Energy algorithm and Nussinov's Base Pair Maximization algorithm. In the main output, these structures can be found under the secondary structure tab. This tab provides the secondary structure in dot-bracket notation, its free-energy and a link to its interactive visualization. By default, the output only contains the four most stable secondary structures.
+               </div>
+           </div>
+
+           <div class="field" id="troubleshoot">
+               <div class="control">
+                    <span class="is-title-5"> <span><span class="icon is-small"><i class="fas fa-cogs" ></i></span> </span>Troubleshoot</span>
+               </div>
+               <div class="control">
+                   <div class="content-box">
+                       <div class="control">
+                            <span class="error-code">ERROR12</span> :  This error occurs if the provided sequence is invalid. Make sure that the sequence only contains A, T, C, G and U base pairs. The sequence can be in uppercase, lowercase or a mixture of both. Whitespaces between base pairs are acceptable as they all will be removed.   
+                       </div>
+                       <br>
+                       <div class="control">
+                            <span class="error-code">ERROR14</span> :   This error occurs due to problems in length of the sequence. The length of sequence must be greater than the maximum length of oligo to allow for fragmentation of sequence. The sequence must also be long enough such that at least two oligos of sizes greater than 15 nts cab be formed. This error can also be thrown by the program if the length of sequence exceeds 600 nts.
+                       </div>
+                       <br>
+                       <div class="control">
+                            <span class="error-code">ERROR32</span> :   The program will raise this exception if the provided melt temperature is not between  55&deg;C and 70&deg;C. This restriction is applied to ensure that sequence is properly fragmented and PCR can be carried out on the output oligos.
+                       </div>
+                       <br>
+                       <div class="control">
+                            <span class="error-code">ERROR46</span> : This is a generalized error that is raised by the program when it is unable to design the oligos with the provided parmeter. This error can be rectified primarily by changing the maximum length of oligos to a smaller value. 
+                       </div>
+                       <br> 
+                       <div class="control">
+                            <span class="error-code">ERROR403</span> : This error arises if you try to request a resource over which you do not have access.
+                       </div>
+                       <br>
+                       <div class="control">
+                            <span class="error-code">ERROR404</span> : A generalized error that is raised when the program cannot find the requested resource.
+                       </div>
+                       <br>
+                       <div class="control">
+                            <span class="error-code">ERROR500</span> : This error indicates that unexpected internal server error occured while processing the input.
+                       </div>
+                       <br>
+        
                    </div>
                </div>
            </div>

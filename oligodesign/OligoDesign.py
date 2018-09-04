@@ -10,6 +10,7 @@ import oligodesign.SecondaryStructureCheck.SecondaryStructCheck as SecondaryStru
 from colorama import Fore, Style, Back
 import time
 from random import choice
+import re
 ABSOLUTE_TEMPERATURE = 273.15
 ACCEPTABLE_BASES = ("A", "T", "C", "G", "U")
 
@@ -332,6 +333,18 @@ class EquiTmOligo(object):
         return (oligos_overlap_index, oligos_tm, primers_index)
 
 
+    def consecutive_basepair_check(self, sequence):
+        try:
+            possible_pairs = [match[0] for match in re.findall(r'((\w)\2{3,})', sequence)]
+            print(possible_pairs)
+        except Exception as e:
+            raise CustomExceptions.UnexpectedError
+        if len(possible_pairs) >=1 :
+            for base in possible_pairs:
+                if base[0] == "G" or base[0] == "C":
+                    return True
+        else:
+            return False
 
     def oligos_representation(self):
         overlap_index, oligo_dictionary, primers_index = self.dna_fragmentation()
@@ -352,24 +365,26 @@ class EquiTmOligo(object):
 
         for oligo in five_three_oligos:
             if oligo[1] == -1:
+                consecutive_GC = self.consecutive_basepair_check(sequence=oligo[0])
                 oligo_length =  len(oligo[0])
                 oligo_melt_Tm = self.Tm_DNA(sequence=oligo[0])
                 oligo_melt_Tm = round(oligo_melt_Tm, 2)
                 oligo_GC_content = self.GC_content(sequence=oligo[0])
                 oligo_name = str(forward_counter)+"_FORWARD"
-                oligo_profile.append((oligo_name, oligo[0], oligo_length, oligo_melt_Tm, oligo_GC_content))
+                oligo_profile.append((oligo_name, oligo[0], oligo_length, oligo_melt_Tm, oligo_GC_content, consecutive_GC))
                 forward_counter = forward_counter + 1
             elif oligo[1] == 1:
+                consecutive_GC = self.consecutive_basepair_check(sequence=oligo[0])
                 oligo_length =  len(oligo[0])
                 oligo_melt_Tm = self.Tm_DNA(sequence=oligo[0])
                 oligo_melt_Tm = round(oligo_melt_Tm, 2)
                 oligo_GC_content = self.GC_content(sequence=oligo[0])
                 oligo_name = str(reverse_counter)+"_REVERSE"
-                oligo_profile.append((oligo_name, oligo[0],oligo_length, oligo_melt_Tm, oligo_GC_content ))
+                oligo_profile.append((oligo_name, oligo[0],oligo_length, oligo_melt_Tm, oligo_GC_content, consecutive_GC ))
                 reverse_counter = reverse_counter + 1
         forward_primer, reverse_primer, fwd, rev = self.design_flanking_primers()
-        oligo_profile.append(("FWD_PRIMER", fwd, len(fwd), self.Tm_DNA(fwd), self.GC_content(fwd)))
-        oligo_profile.append(("REV_PRIMER", rev, len(rev), self.Tm_DNA(rev), self.GC_content(rev) ))
+        oligo_profile.append(("FWD_PRIMER", fwd, len(fwd), self.Tm_DNA(fwd), self.GC_content(fwd), "NA"))
+        oligo_profile.append(("REV_PRIMER", rev, len(rev), self.Tm_DNA(rev), self.GC_content(rev), "NA" ))
 
         return oligo_profile
 
@@ -383,7 +398,6 @@ class EquiTmOligo(object):
             forward_primer = forward_primer + sequence_reverse[counter_fwd]
             counter_fwd = counter_fwd + 1
         while self.Tm_DNA(sequence=reverse_primer) <= self.min_tm and counter_rev > -self.sequence_length:
-            print(reverse_primer)
             reverse_primer = reverse_primer + reverse_seq[counter_rev]
             counter_rev = counter_rev - 1
 
@@ -398,7 +412,6 @@ class EquiTmOligo(object):
             rev_primer_lst[-rev] = reverse_primer[-rev]
         
         reverse_primer = "".join(rev_primer_lst)
-        print("Reverse Primer: {reverse_primer}")
         return forward_primer, reverse_primer, fwd_primer, rev_primer
 
         
@@ -460,14 +473,10 @@ class EquiTmOligo(object):
         fwd_primers = ""
         rev_primers = ""
         for index, fwd in enumerate(forward_primers):
-            if len(fwd)> self.max_oligo_length:
-                print(f"Sequence Length: {len(fwd)} {fwd}")
             assert len(fwd) <= self.max_oligo_length
             fwd_primers = fwd_primers + "\n" + str(index+1) + "F" + "  " + fwd + "   " + str(len(fwd))
 
         for index, rev in enumerate(reverse_primers):
-            if len(rev)> self.max_oligo_length:
-                print(f"Sequence Length: {len(rev)} {rev}")
             assert len(rev) <= self.max_oligo_length
             rev_primers = rev_primers + "\n" + str(index+1) + "R" + "  " + rev + "  " + str(len(rev))
 
@@ -475,7 +484,6 @@ class EquiTmOligo(object):
         representation = f"{forward_seq}\n{interaction}\n{reverse_seq}\n{interaction2}"
         representation = "\n" + representation + "\n\n" + fwd_primers +"\n" +  rev_primers
         reverse_sequence = self.dna_complement(self.sequence)
-        print(f"{self.sequence}\n{reverse_sequence}")
         return (fwd_flanking, forward_seq, interaction, reverse_seq, interaction2, rev_flanking)
 
    
@@ -497,11 +505,10 @@ class EquiTmOligo(object):
             return is_valid, "The provided temperature is invalid. The temperatue must be between 55 and 70 degree celsius."
 
         except CustomExceptions.UnexpectedError:
-            error_code = "ERROR400: Incompatible Arguments"
+            error_code = "ERROR46: Incompatible Arguments"
             return is_valid, error_code, "The program was unable to find an output that satisfied the provided parameter."
 
         except Exception as e:
-            print(e)
             error_code = "ERROR500: Internal Server Error"
             is_valid = False
             return  is_valid, error_code, "The server encountered an unexpected error"
@@ -532,6 +539,4 @@ class EquiTmOligo(object):
             secondary_structure_list.append(secondary_structure_output)
         most_stable_structure = sorted(secondary_structure_list, key=lambda x: x[2], reverse=False)
         return most_stable_structure[0: 4]
-
-
 
