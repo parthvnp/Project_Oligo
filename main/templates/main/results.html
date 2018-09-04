@@ -9,23 +9,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
         crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'main/css/style.css' %}"> {% endblock static_files %}
+    <link rel="stylesheet" href="{% static 'main/css/style.css'%}">
+    {% endblock static_files %}
     <title>
         {% block title %} PyOligo - Results {{result_id}} {% endblock title %}
     </title>
+
+
 </head>
 
 <body>
+
     {% block content %}
+   
     <div class="main-output">
         <div class="column is-6 is-offset-2">
-                <div class="field">
-                        <div class="control content-tag">
-                                Result ID: {{result_id}}
-                        </div>
-                    </div>
+            <div class="field">
+                <div class="control content-tag">
+                    Result ID: {{result_id}}
+                </div>
+            </div>
         </div>
-            
+       
+        <div class="column is-4 is-offset-2">
+            <div class="field">
+                <div class="control content-tag-2">
+                    Sequence Name: {{sequence_name}}
+                </div>
+            </div>
+        </div>
+
+
         <div class="column is-8 is-offset-2">
             <div class="sequence-container">
                 <div class="sequence-header">
@@ -33,15 +47,53 @@
                 </div>
             </div>
             <div class="sequence-body">
-<pre class="preserve-space">
-<span class="color-1">{{output_oligos.0}}</span>
-<span class="color-2">{{output_oligos.1}}</span>
-<span class="color-3">{{output_oligos.2}}</span>
-<span class="color-4">{{output_oligos.3}}</span>
+                <pre class="preserve-space">
+<span class="color-1" style="font-weight:bold">{{output_oligos.0}}</span>
 
+<span class="color-2" style="font-weight:bold">{{output_oligos.1}}</span>
+<span class="color-3" style="font-weight:bold">{{output_oligos.2}}</span>
+<span class="color-4" style="font-weight:bold">{{output_oligos.3}}</span>
+<span class="color-3" style="font-weight:bold">{{output_oligos.4}}</span>
+
+<span class="color-2" style="font-weight:bold">{{output_oligos.5}}</span>
 </pre>
-
             </div>
+
+            <div class="field">
+                    <div class="control">
+                        <div class="sequence-header">
+                           Oligo Profile
+                        </div>
+                        <div class="sequence-container">
+                            {% if output_oligos_profile %}
+                            <pre class="preserve-space">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Sequence Name</th>
+                                        <th>Sequence (5'-3') </th>
+                                        <th>Length</th>
+                                        <th>Melt Temperature (&deg;C) </th>
+                                        <th>GC Content (%)</th>
+                                    </tr>
+                                </thead>
+                                    {% for oligo in output_oligos_profile %}
+                                    <tr>
+                                        <td> <span class="table-highlighter-1">{{oligo.0}}</span>   </td>
+                                        <td> <span class="{% cycle 'color-3' 'color-1' %}" style="font-weight:bold" >{{oligo.1}}</span>  </td>
+                                        <td> <span class="table-highlighter-6">{{oligo.2}}   </span></td>
+                                        <td>   <span class="table-highlighter-6">{{oligo.3}}   </span></td>
+                                        <td> <span class="table-highlighter-6">{{oligo.4}}   </span></td>
+                                    </tr>
+                                    {% endfor %}
+                            </table>
+                        </pre>
+                            {% else %}
+                            {% endif %}
+                        </div>
+                    </div>
+             
+                </div>
 
             <div class="field">
                 <div class="control">
@@ -49,17 +101,82 @@
                         Primer Dimer Formation
                     </div>
                     <div class="sequence-contianer">
-                        {% for dimer in primer_dimer  %}
+                        {% if primer_dimer %}
+                        {% for primer in primer_dimer  %}
                         <pre class="preserve-space">
-                            {{dimer}}
-                        </pre>
+<span class="is-heading-1">{{dimer.0.0}}</span> <span class="is-heading-2">{{dimer.0.1}} </span> <span class="is-heading-4">{{dimer.0.3}}</span> 
+
+
+<span class="primer-highlighter">{{dimer.0.4}}</span> 
                         
                         {% endfor %}
+                        {% else %}
+                        <div class="sequence-container">
+                            <br>
+                            <br>
+                                <span class="not-found">No valid primer dimers were found. </span>
+                                <br>
+                                <br>
+                        </div>
+
+                        {% endif %}
+                    </pre>
+                           
+                           
+                        
+                        
                     </div>
                 </div>
-    
+
+            </div>
+
+         
+            
+
+            <div class="field">
+                <div class="control">
+                    <div class="sequence-header">
+                        Secondary Structure
+                    </div>
+                    <div class="sequence-container">
+                        {% if secondary_structure %}
+                        <pre class="preserver-sapce">
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Sequence Name  </th>
+                                    <th>  Secondary Structure (Dot Bracket)   </th>
+                                    <th>deltaG (kcal/mol)    </th>
+                                    <th>  Structure Link </th>
+                                </tr>
+                            </thead>
+                        {% for structure in secondary_structure %}
+                        <tr>
+                            <td><span class="table-highlighter-1">{{structure.3}}</span></td>
+                            <td><span class="table-highlighter-3">{{structure.1}}</span></td>
+                            <td><span class="table-highlighter-5">{{structure.2}}</span></td>
+                            <td><a data-tooltip="Opens a new tab with secondary structure" href="http://nibiru.tbi.univie.ac.at/forna/forna.html?id=url/name&sequence={{structure.0}}&structure={{structure.1}}" target="_blank"> <code>{{structure.3}}-Structure Visualization</code></a></td>
+                        </tr>
+                        
+                        {% endfor %}
+                        {% else %}
+                        <code>No valid secondary structure </code>
+                        {% endif %}
+                    </table>
+                    </pre>
+                    </div>
+
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <a href="{% url 'main:download' result_id %}" target="_blank" data-tooltip="Download your results in text format"><button class="button is-link " style="font-weight:bold">Download Results</button></a>
+                    </div>
+                </div>
             </div>
         </div>
+        
+        
     </div>
 
 

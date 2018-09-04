@@ -237,7 +237,7 @@ def dna_heterodimers_score(sequence1, sequence2, scores_returned=1):
                 mismatch_score = mismatch_score + 1
                 interaction[min_char] = "x"
         interaction = "".join(interaction)
-        global_sequence = f"{gaps_min}{max_sub_seq}{remainder_max_sub_seq}\n{gaps_min}{interaction}\n{remainder_min_sub_seq}{min_sub_seq}"
+        global_sequence = f"5'-{gaps_min}{max_sub_seq}{remainder_max_sub_seq}-3'\n   {gaps_min}{interaction}   \n3'-{remainder_min_sub_seq}{min_sub_seq}-5'"
         if len(score_matrix) >=3:
             analysis_score_matrix = np.array(score_matrix, dtype=np.int16)
             consecutive_matrix = consecutive(analysis_score_matrix)
@@ -270,7 +270,7 @@ def dna_heterodimers_score(sequence1, sequence2, scores_returned=1):
                 interaction[min2_char] = "x"
 
         interaction = "".join(interaction)
-        global_sequence = f"{remainder_max_sub_seq_2}{max_sub_seq_2}\n{gaps_min}{interaction}\n{gaps_min}{min_sub_seq_2}{remainder_min_sub_seq_2}"
+        global_sequence = f"5'-{remainder_max_sub_seq_2}{max_sub_seq_2}-3'\n   {gaps_min}{interaction}  \n3'-{gaps_min}{min_sub_seq_2}{remainder_min_sub_seq_2}-5'"
         if len(score_matrix) >=3:
             analysis_score_matrix = np.array(score_matrix, dtype=np.int16)
             consecutive_matrix = consecutive(analysis_score_matrix)
@@ -284,7 +284,6 @@ def dna_heterodimers_score(sequence1, sequence2, scores_returned=1):
 
     top_score_seqs = sorted(sequence_of_interest.items(), reverse=True, key= lambda kv: kv[1][0])[0:scores_returned]
     global_sequence_matrix = dict(sorted(global_sequence_matrix.items(), reverse=True, key = lambda kv: kv[1][0])[0:scores_returned])
-
     return (top_score_seqs, global_sequence_matrix)
 
 def dna_heterodimers_energy(sequence1, sequence2):
@@ -323,19 +322,21 @@ def dna_heterodimers_energy(sequence1, sequence2):
         # A generalized penalty is applied for internal mismatches while calculating melting temperature and deltaG values for homo and heterodimers.
         # This penalty value is obtained from the following paper:
         # AutoDimer: a screening tool for primer-dimer and hairpin structures Biotechniques Vol 37, 2
+        deltaG = round(deltaG, 2)
+        melting_temperature = round(melting_temperature, 2)
         sequence_energy[complete_sequence] = deltaG, melting_temperature
     return sequence_energy,sequnences_scores
 
-def primer_dimer_representation(sequence1, sequence2, Tm_value):
+def primer_dimer_representation(name1, name2, sequence1, sequence2, Tm_value):
     sequence_thermodynamics, sequence_scores = dna_heterodimers_energy(sequence1=sequence1, sequence2=sequence2)
     sequence_score_matrix_score = []
-    representation = ""
+    representation_list = []
     for value in sequence_scores.values():
         sequence_score_matrix_score.append(value[0])
     for sequence, score, energy in zip(sequence_scores.keys(), sequence_score_matrix_score, sequence_thermodynamics.values()):
         if energy[1] >= Tm_value:
-            representation = representation + f"Score:{score}  deltaG:{energy[0]}  Tm:{energy[1]}\n{sequence}\n\n"
-    return representation
+            representation_list.append((f"Combinations: {name1}:{name2} ",  f" Score:{score}",   f" deltaG:{energy[0]} ",  f" Tm:{energy[1]} ", sequence))
+    return representation_list[0:4]
 
 
 def homodimer_check(sequence, Tm_value):
@@ -345,10 +346,10 @@ def homodimer_check(sequence, Tm_value):
     outcome = primer_dimer_representation(sequence1=sequence1, sequence2=sequence2, Tm_value=Tm_value)
     return outcome
 
-def main_misprime_check(sequence1, sequence2, Tm_value, heterodimer=True):
+def main_misprime_check(name1, name2, sequence1, sequence2, Tm_value, heterodimer=True):
     try:
         if heterodimer == True:
-            return primer_dimer_representation(sequence1=sequence1, sequence2=sequence2, Tm_value=Tm_value)
+            return primer_dimer_representation(name1=name1, name2=name2, sequence1=sequence1, sequence2=sequence2, Tm_value=Tm_value)
         else:
             return homodimer_check(sequence=sequence1)
 

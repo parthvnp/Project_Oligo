@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% block static_files %}
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'form/css/style.css'%}">
+    {% endblock static_files %}
+    <title>
+        {% block title %}
+        PyOligo-Contact Form
+        {% endblock title %}
+    </title>
+</head>
+
+<body>
+    {% block content %}
+    <br>
+    <br>
+    <br>
+    <div class="columns">
+        <div class="column is-6 is-offset-3">
+           <div>
+               <h1 class="title">
+                   Contact Form
+               </h1>
+           </div>
+        </div>
+    </div>
+    <form action="{% url 'forms:contact_output'%}" method="POST">
+        {% csrf_token %}
+       <div class="columns is-multiline">
+           <div class="column is-6 is-offset-3 content-box">
+               <div class="field">
+                   <div class="control">
+                       <label for="name">Name*</label>
+                   </div>
+               </div>
+               <div class="field">
+                   <div class="control">
+                       {{contact.name}}
+                   </div>
+               </div>
+               <div class="field">
+                    <div class="control">
+                        <label for="email">Email*</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        {{contact.email}}
+                    </div>
+                </div>
+                <div class="field">
+                        <div class="control">
+                            <label for="title"> Title </label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            {{contact.title}}
+                        </div>
+                    </div>
+                    <div class="field">
+                            <div class="control">
+                                <label for="message"> Comment </label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                {{contact.message}}
+                            </div>
+                        </div>
+
+                  <div class="field">
+                      <div class="control is-expanded">
+                         <input type="submit" class="button is-dark is-fullwidth">
+                      </div>
+                  </div>
+           </div>
+       </div>
+    </form>
+    {% endblock content %}
+</body>
+
+</html>

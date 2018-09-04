@@ -19,11 +19,11 @@
 </head>
 
 <body>
-    <nav class="navbar is-link" role="navigation" aria-label="dropdown navigation">
+    <nav class="navbar is-dark" role="navigation" aria-label="dropdown navigation">
         <div class="container">
             <div class="navbar-brand">
-                <a class="navbar-item" href="#" style="font-weight:bold;">
-                    OurLogo
+                <a class="navbar-item" href="{% url 'main:index' %}" style="font-weight:bolder;">
+                  PyOligo
                 </a>
                 <span class="navbar-burger burger" data-target="navMenu">
                     <span></span>
@@ -33,7 +33,7 @@
             </div>
             <div id="navMenu" class="navbar-menu">
                 <div class="navbar-end">
-                    <a href="#" class="navbar-item is-active">Home</a>
+                    <a href="{% url 'forms:index' %}" class="navbar-item is-active">Home</a>
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
                             Docs
@@ -46,18 +46,15 @@
                             <a class="navbar-item">
                                 Elements
                             </a>
-                            <a class="navbar-item">
-                                Components
-                            </a>
                             <hr class="navbar-divider">
                             <div class="navbar-item">
                                 Version 0.0.1
                             </div>
                         </div>
                     </div>
-                    <a href="#" class="navbar-item">Contact</a>
-                    <a href="#" class="navbar-item">References</a>
-                    <a href="#" class="navbar-item">Demo</a>
+                    <a href="{% url 'forms:contact'%}" class="navbar-item">Contact</a>
+                    <a href="{% url 'forms:contact'%}" class="navbar-item">References</a>
+                    <a href="{% url 'forms:contact'%}" class="navbar-item">Demo</a>
 
                 </div>
             </div>

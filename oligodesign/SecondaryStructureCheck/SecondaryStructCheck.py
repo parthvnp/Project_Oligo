@@ -10,7 +10,7 @@ RNAstructure's Python bindings for secondary structure analysis.
 """
 import numpy as np
 import forgi.graph.bulge_graph as fgb
-from Zuker import RNAstructure
+from oligodesign.SecondaryStructureCheck.Zuker import RNAstructure
 from itertools import groupby
 from operator import itemgetter
 
@@ -107,7 +107,7 @@ class ZukerPredictor(object):
 
     def mfe_fold(self):
         raw_sequence = RNAstructure.RNA.fromString(self.sequence, backbone="DNA")
-        raw_sequence.FoldSingleStrand(maximumstructures=2)
+        raw_sequence.FoldSingleStrand(maximumstructures=1)
         mfe = raw_sequence.GetFreeEnergy(1)
         stem_pairs = [(i,raw_sequence.GetPair(i)) for i in raw_sequence.iterIndices()]
         output = ""
@@ -126,10 +126,13 @@ class ZukerPredictor(object):
                 output = output + "."
         pairs = [(paren[0] - 1, paren[1] - 1) for paren in stem_pairs if paren[1] !=0]
         return (stacking_interactions, output, mfe, pairs)
+    
 
-# z1 = ZukerPredictor(sequence="GCATGTTGGAGTTATTGCCAACAGCGCAGCAGCAGCTAGCGCTACGCGGCATGCGCGCGATCGGCGCATCCTTAAGCGCACAG")
-# print(z1.mfe_fold())
-
+    def mfe_fold_output(self):
+        mfe = self.mfe_fold()
+        mfe_output = mfe[1]
+        mfe_energy = mfe[2]
+        return [self.sequence, mfe_output, mfe_energy]
 
 class SecondaryStructEnergy(object):
 
@@ -261,9 +264,3 @@ class SecondaryStructEnergy(object):
         pass
 
 
-s1 = SecondaryStructEnergy(sequence="GCATGTTGGAGTTATTGCCAACAGCGCAGCAGCAGCTAGCGCTACGCGGCATGCGCGCGATCGGCGCATCCTTAAGCGCACAGTCGCGCATAGCGGCGCATGCATACGATC")
-s1.internal_bulge_loops()
-
-z1 = ZukerPredictor(sequence="GCATGTTGGAGTTATTGCCAACAGCGCAGCAGCAGCTAGCGCTACGCGGCATGCGCGCGATCGGCGCATCCTTAAGCGCACAGTCGCGCATAGCGGCGCATGCATACGATC")
-z1_Struct = z1.mfe_fold()
-print(z1_Struct[1])

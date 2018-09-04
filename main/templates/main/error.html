@@ -1,0 +1,57 @@
+{% extends "base.html" %} {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"> 
+    {% block static_files %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="{%static 'main/css/style.css' %}">
+    {% endblock static_files %}
+    <title>
+        {% block title %} PyOligo - Form {% endblock title %}
+    </title>
+</head>
+<body>
+    {% block content %}
+    <div class="columns">
+        <div class="column is-6 is-offset-2">
+            <br>
+            <br>
+                <span class="error-code">{{output_oligos.1}}</span>
+                <div class="content-box">
+                   <code>{{output_oligos.1}}</code> : {{output_oligos.2}}
+                </div>
+                    <div class="content-box">
+                        <ul>
+                            <li>
+                                Please review the documentation to <a class="button is-danger">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-cogs"></i>
+                                        </span>
+                                        <span>troubleshoot</span>
+                                        </a> the error and identify the possible sources of error.
+                            </li>
+                            <li>
+                                If you are unable to find a satisfactory solution to the problem, kindly contact us with the error code and your input via the  <a class="button is-primary">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-edit"></i>
+                                        </span>
+                                        <span>contact form</span>
+                                    </a> or <a href="" class="button is-warning"><span class="icon is-small">
+                                            <i class="fas fa-envelope"></i>
+                                        </span>
+                                        <span>email</span></a>
+                            </li>
+                        </ul>
+                    </div>
+        </div>
+    </div>
+    
+    {% endblock content %}
+</body>
+</html>

@@ -6,10 +6,12 @@ import time
 import math
 from oligodesign import CustomExceptions
 from oligodesign import MisprimeCheck
+import oligodesign.SecondaryStructureCheck.SecondaryStructCheck as SecondaryStruct
 from colorama import Fore, Style, Back
 import time
 from random import choice
 ABSOLUTE_TEMPERATURE = 273.15
+ACCEPTABLE_BASES = ("A", "T", "C", "G", "U")
 
 class bcolors:
     HEADER = '\033[95m'
@@ -26,7 +28,7 @@ class bcolors:
 class EquiTmOligo(object):
 
     def __init__(self, sequence, min_tm=55.0, min_oligo_length=15, max_oligo_length=60, oligo_conc=0.25e-6, monovalent=50e-3, divalent=0.0, correction_type="DEFAULT"):
-        self.sequence = sequence.upper()
+        self.sequence = self.remove_whitespaces(sequence)
         self.sequence_length = len(self.sequence)
         self.min_tm = min_tm
         self.min_oligo_length = min_oligo_length
@@ -87,42 +89,14 @@ class EquiTmOligo(object):
                           "G": -2.8
                           }
 
-    def sequence_validation(self):
-        is_valid = True
-        try:
-
-            for base in self.sequence:
-                if base not in "ATCGU":
-                    raise CustomExceptions.InvalidSequence
-
-            if self.sequence_length < 60 or self.sequence_length > 600:
-                raise CustomExceptions.InvalidLength
-
-            if self.min_oligo_length > self.max_oligo_length:
-                raise CustomExceptions.InvalidLength
-
-            if self.min_tm < 55 or self.min_tm > 70:
-                raise CustomExceptions.InvalidTemperature
-
-        except CustomExceptions.InvalidSequence:
-            print("Invalid DNA sequence.")
-            is_valid = False
-
-        except CustomExceptions.InvalidLength:
-            print("The length of provided is invalid. The minimum acceptable length is 60 and the maximum acceptable length is 600.")
-            is_valid = False
-
-        except CustomExceptions.InvalidTemperature:
-            print("The acceptable temperature range for the program is 55-70" + u"\u00B0" + ".")
-            is_valid = False
-
-        return is_valid
-
-
     def dna_complement(self, sequence):
         complement_rules = {"A": "T", "T": "A", "G":"C", "C":"G"}
         complement = "".join([complement_rules[base] for base in sequence])
         return complement
+
+    def remove_whitespaces(self, sequence):
+        sequence = sequence.replace(" ", "")
+        return sequence.upper()
 
     def reverse_complement(self, sequence):
         reverse_complement = self.dna_complement(sequence)[::-1]
@@ -135,9 +109,10 @@ class EquiTmOligo(object):
                 content = content + 1
             elif base == "C":
                 content = content + 1
-        content_percentage = content/self.sequence_length
+        content_percentage = content/len(sequence)
+        content_percentage = content_percentage * 100
+        content_percentage = round(content_percentage, 2) 
         return content_percentage
-
 
     def Tm_DNA(self,sequence):
 
@@ -171,6 +146,7 @@ class EquiTmOligo(object):
         if self.monovalent == 1:
             Tm_celsius = Tm_deltaH / (Tm_deltaS + 1.987 * (math.log(self.oligo_conc)))
             Tm_celsius = Tm_celsius - 273.15
+            Tm_celsius = round(Tm_celsius, 2)
             return Tm_celsius
         elif self.monovalent != 1:
             if self.correction_type == "DEFAULT":
@@ -179,6 +155,7 @@ class EquiTmOligo(object):
                     Tm_deltaS = Tm_deltaS + (0.368 * ((len(sequence) -1) * math.log(self.monovalent)))
                     Tm_celsius = Tm_deltaH / (Tm_deltaS + 1.987 * ((math.log(self.oligo_conc))))
                     corrected_Tm_celsius = Tm_celsius - 273.15
+                    corrected_Tm_celsius = round(corrected_Tm_celsius, 2)
                     return corrected_Tm_celsius
             # TODO: Include Support for Owczry type ionic correction
             elif self.correction_type == "OWCZARY":
@@ -193,6 +170,7 @@ class EquiTmOligo(object):
                     (0.940*math.pow(math.log(self.monovalent),2))
                     * 1e-5
                 )
+                corrected_Tm = round(corrected_Tm, 2)
                 return corrected_Tm
 
     def primer_index_generation(self, alter_avg_size=None):
@@ -209,12 +187,6 @@ class EquiTmOligo(object):
 
         minimum_oligos = math.ceil((self.sequence_length - avg_size)/(avg_size - overlap))
         minimum_oligos = minimum_oligos + 1
-
-        try:
-            if minimum_oligos <= 2:
-                raise CustomExceptions.InvalidLength
-        except CustomExceptions.InvalidLength:
-            print("The sequence must be long enough to generate at least two oligos.")
 
         temp_i = 0
         temp_j = avg_size
@@ -281,7 +253,23 @@ class EquiTmOligo(object):
 
 
     def dna_fragmentation(self):
+
         primers_index = self.primers_index_readjustment()
+
+        for base in self.sequence:
+            if base not in ACCEPTABLE_BASES:
+                raise CustomExceptions.InvalidSequence
+                break
+        if self.min_oligo_length > self.sequence_length:
+            raise CustomExceptions.InvalidLength
+            
+        if self.min_tm > 70 or self.min_tm < 55:
+            raise CustomExceptions.InvalidTemperature
+           
+
+        if primers_index.shape[0] < 2:
+            raise CustomExceptions.InvalidLength
+
         oligo_overlaps = []
         if primers_index.shape[0] >= 2:
             for i in range(primers_index.shape[0]-1):
@@ -291,7 +279,7 @@ class EquiTmOligo(object):
         oligos_tm = {}
         oligos_overlap_index = []
         default_tm = self.min_tm
-        for oligo_index in oligo_overlaps:
+        for oligo_index, oligo_length in zip(oligo_overlaps, primers_index):
             temp_i = 1
             melt_tm = self.Tm_DNA(sequence=self.sequence[int(oligo_index[0]): int(oligo_index[1]+1)])
             if melt_tm > default_tm:
@@ -326,10 +314,23 @@ class EquiTmOligo(object):
                 oligos_overlap_index.append([oligo_index[0], oligo_index[1]])
                 sequence_segment = self.sequence[int(oligo_index[0]):int(oligo_index[1]+1)]
                 oligos_tm[sequence_segment] = melt_tm
+
         for i,j in zip(oligos_overlap_index, range(1, len(oligos_overlap_index) + 1)):
             primers_index[j,0] = i[0]
             primers_index[j-1,1] = i[1]
+        
+        primer_check_temp_value = 2
+
+        while primer_check_temp_value < primers_index.shape[0]:
+            if primers_index[primer_check_temp_value][0] - primers_index[primer_check_temp_value-2][1] >= 5:
+                primer_check_temp_value = primer_check_temp_value + 1
+            else:
+                raise CustomExceptions.UnexpectedError
+                break
+           
+            
         return (oligos_overlap_index, oligos_tm, primers_index)
+
 
 
     def oligos_representation(self):
@@ -353,6 +354,7 @@ class EquiTmOligo(object):
             if oligo[1] == -1:
                 oligo_length =  len(oligo[0])
                 oligo_melt_Tm = self.Tm_DNA(sequence=oligo[0])
+                oligo_melt_Tm = round(oligo_melt_Tm, 2)
                 oligo_GC_content = self.GC_content(sequence=oligo[0])
                 oligo_name = str(forward_counter)+"_FORWARD"
                 oligo_profile.append((oligo_name, oligo[0], oligo_length, oligo_melt_Tm, oligo_GC_content))
@@ -360,16 +362,49 @@ class EquiTmOligo(object):
             elif oligo[1] == 1:
                 oligo_length =  len(oligo[0])
                 oligo_melt_Tm = self.Tm_DNA(sequence=oligo[0])
+                oligo_melt_Tm = round(oligo_melt_Tm, 2)
                 oligo_GC_content = self.GC_content(sequence=oligo[0])
                 oligo_name = str(reverse_counter)+"_REVERSE"
                 oligo_profile.append((oligo_name, oligo[0],oligo_length, oligo_melt_Tm, oligo_GC_content ))
                 reverse_counter = reverse_counter + 1
-        print(oligo_profile)
+        forward_primer, reverse_primer, fwd, rev = self.design_flanking_primers()
+        oligo_profile.append(("FWD_PRIMER", fwd, len(fwd), self.Tm_DNA(fwd), self.GC_content(fwd)))
+        oligo_profile.append(("REV_PRIMER", rev, len(rev), self.Tm_DNA(rev), self.GC_content(rev) ))
+
         return oligo_profile
 
+    def design_flanking_primers(self):
+        sequence_reverse = self.dna_complement(self.sequence)
+        forward_primer = sequence_reverse[0]
+        counter_fwd, counter_rev = 1, -2
+        reverse_seq = self.sequence
+        reverse_primer = reverse_seq[-1]
+        while self.Tm_DNA(sequence=forward_primer) <= self.min_tm and counter_fwd < self.sequence_length:
+            forward_primer = forward_primer + sequence_reverse[counter_fwd]
+            counter_fwd = counter_fwd + 1
+        while self.Tm_DNA(sequence=reverse_primer) <= self.min_tm and counter_rev > -self.sequence_length:
+            print(reverse_primer)
+            reverse_primer = reverse_primer + reverse_seq[counter_rev]
+            counter_rev = counter_rev - 1
 
+        reverse_primer = reverse_primer[::-1]
+        rev_primer = reverse_primer
+        fwd_primer = forward_primer
+        forward_primer = "3'- " + forward_primer + " -5'"
+        reverse_primer = "5'- " + reverse_primer + " -3'"
+        rev_primer_lst = [" "] * (self.sequence_length + 8 )
+        for rev in range(1, len(reverse_primer) + 1):
+            assert len(reverse_primer) < self.sequence_length
+            rev_primer_lst[-rev] = reverse_primer[-rev]
+        
+        reverse_primer = "".join(rev_primer_lst)
+        print("Reverse Primer: {reverse_primer}")
+        return forward_primer, reverse_primer, fwd_primer, rev_primer
+
+        
     def dna_representation(self):
         ( overlap_index, overlap_dictionary, primer_set) = self.dna_fragmentation()
+        fwd_flanking, rev_flanking, fwd, rev = self.design_flanking_primers()
         forward, reverse, = [], [],
         sequence_index = []
         forward_primers = []
@@ -381,6 +416,7 @@ class EquiTmOligo(object):
         sequence_complement = self.dna_complement(self.sequence)
         reverse_seq = [" "] * len(sequence_complement)
 
+        
         for primer in primer_set:
             seq_start, seq_stop, direction = primer[0], primer[1], primer[2]
 
@@ -438,30 +474,64 @@ class EquiTmOligo(object):
 
         representation = f"{forward_seq}\n{interaction}\n{reverse_seq}\n{interaction2}"
         representation = "\n" + representation + "\n\n" + fwd_primers +"\n" +  rev_primers
-        return (forward_seq, interaction, reverse_seq, interaction2)
+        reverse_sequence = self.dna_complement(self.sequence)
+        print(f"{self.sequence}\n{reverse_sequence}")
+        return (fwd_flanking, forward_seq, interaction, reverse_seq, interaction2, rev_flanking)
 
+   
     def main(self):
+        is_valid = False
         try:
-            self.sequence_validation()
-            return (self.dna_representation())
+           output_oligos = self.dna_representation()
 
-        except AssertionError:
-            print("Could not find the oligos with the desired parameter")
+        except CustomExceptions.InvalidSequence:
+            error_code = "ERROR12: Invalid Sequence"
+            return is_valid, error_code, "The provided sequence is invalid."
 
+        except CustomExceptions.InvalidLength:
+            error_code = "ERROR14: Invalid Length"
+            return is_valid, error_code, "The length of provided sequence is incompatible with the provided arguments. The length of sequence must be greater than the maximum length of oligo."
+
+        except CustomExceptions.InvalidTemperature:
+            error_code = "ERROR32: Invalid Temperature"
+            return is_valid, "The provided temperature is invalid. The temperatue must be between 55 and 70 degree celsius."
+
+        except CustomExceptions.UnexpectedError:
+            error_code = "ERROR400: Incompatible Arguments"
+            return is_valid, error_code, "The program was unable to find an output that satisfied the provided parameter."
+
+        except Exception as e:
+            print(e)
+            error_code = "ERROR500: Internal Server Error"
+            is_valid = False
+            return  is_valid, error_code, "The server encountered an unexpected error"
+        
+        else:
+            is_valid = True
+            return is_valid, output_oligos
+            
     def primer_dimer_check(self):
-        primer_dimer_list = []
-        oligo_list = self.oligos_representation()
-        for o1 in range(len(oligo_list)):
-            for o2 in range(len(oligo_list)):
-                if o1 != o2:
-                    reverse_sequence = oligo_list[o2][1][::-1]
-    
-                    primer_dimer = MisprimeCheck.main_misprime_check(oligo_list[o1][1], reverse_sequence, Tm_value=self.min_tm)
-                    if primer_dimer:
-                        primer_dimer_list.append(primer_dimer)
-                        print(primer_dimer)
+            primer_dimer_list = []
+            oligo_list = self.oligos_representation()[:-2]
+            for o1 in range(len(oligo_list)):
+                for o2 in range(len(oligo_list)):
+                    if o1 != o2:
+                        reverse_sequence = oligo_list[o2][1][::-1]
+                        primer_dimer = MisprimeCheck.main_misprime_check(oligo_list[o1][0], oligo_list[o2][0], oligo_list[o1][1], reverse_sequence, Tm_value=self.min_tm)
+                        if primer_dimer != []:
+                            primer_dimer_list.append(primer_dimer)
+            return primer_dimer_list[0:4]
 
-        return primer_dimer_list
+    def SecondaryStructureCheck(self):
+        secondary_structure_list = []
+        oligo_list = self.oligos_representation()[:-2]
+        for oligo in oligo_list:
+            secondary_structure = SecondaryStruct.ZukerPredictor(oligo[1])
+            secondary_structure_output = secondary_structure.mfe_fold_output()
+            secondary_structure_output.append(oligo[0])
+            secondary_structure_list.append(secondary_structure_output)
+        most_stable_structure = sorted(secondary_structure_list, key=lambda x: x[2], reverse=False)
+        return most_stable_structure[0: 4]
 
-sequence = EquiTmOligo(sequence="AGCTAGCGATCGCGGCCGACGATCGATCGGCGCATGCAGCTACGATGCGCGCGCTAGCGCTAGCGCGCTAGCGCGCTAGCGCGCTACGCGTACGGCGCGCTAGCGC")
-sequence.primer_dimer_check()
+
+

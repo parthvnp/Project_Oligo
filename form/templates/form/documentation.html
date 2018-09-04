@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% block static_files %}
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'form/css/style.css'%}">
+    {% endblock static_files %}
+    <title>
+        {% block title %}
+        PyOligo-Documentation
+        {% endblock title %}
+    </title>
+</head>
+
+<body>
+    {% block content %}
+    <div class="columns">
+        <div class="column is-2 is-offset-1">
+            <br>
+            <br>
+            <br>
+                <aside class="menu content-box-3">
+                        <p class="menu-label">
+                          General
+                        </p>
+                        <ul class="menu-list">
+                          <li><a>Dashboard</a></li>
+                          <li><a>Customers</a></li>
+                        </ul>
+                        <p class="menu-label">
+                          Administration
+                        </p>
+                        <ul class="menu-list">
+                          <li><a>Team Settings</a></li>
+                          <li>
+                            <a class="is-active">Manage Your Team</a>
+                            <ul>
+                              <li><a>Members</a></li>
+                              <li><a>Plugins</a></li>
+                              <li><a>Add a member</a></li>
+                            </ul>
+                          </li>
+                          <li><a>Invitations</a></li>
+                          <li><a>Cloud Storage Environment Settings</a></li>
+                          <li><a>Authentication</a></li>
+                        </ul>
+                        <p class="menu-label">
+                          Transactions
+                        </p>
+                        <ul class="menu-list">
+                          <li><a>Payments</a></li>
+                          <li><a>Transfers</a></li>
+                          <li><a>Balance</a></li>
+                        </ul>
+                      </aside>
+        </div>
+        <div class="column is-7 ">
+           <div class="field">
+               <div class="control">
+                   <div class="content-box">
+
+                   </div>
+               </div>
+           </div>
+        </div>
+    </div>
+    
+    {% endblock content %}
+</body>
+
+</html>

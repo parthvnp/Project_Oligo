@@ -26,8 +26,8 @@ try:
 except ImportError:
     from __builtin__ import object
 
-from Zuker import RNAstructure_wrap
-from Zuker import Error_handling as e
+from oligodesign.SecondaryStructureCheck.Zuker import RNAstructure_wrap
+from  oligodesign.SecondaryStructureCheck.Zuker import Error_handling as e
 import re
 
 #these are named this way to cooperate with python name manglign

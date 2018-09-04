@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="723px" height="723px" viewBox="0 0 723 723" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 5</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-5" transform="translate(0.000000, 118.000000)">
+            <g id="Group-4" transform="translate(0.000000, 42.000000)" fill="#B5E6DC">
+                <polygon id="Polygon" transform="translate(301.500000, 201.409520) rotate(90.000000) translate(-301.500000, -201.409520) " points="301.5 -99.984759 502.417894 50.7123803 502.417894 352.106659 301.5 502.803798 100.582106 352.106659 100.582106 50.7123803"></polygon>
+                <polygon id="Polygon" transform="translate(421.500000, 201.409520) rotate(90.000000) translate(-421.500000, -201.409520) " points="421.5 -99.984759 622.417894 50.7123803 622.417894 352.106659 421.5 502.803798 220.582106 352.106659 220.582106 50.7123803"></polygon>
+            </g>
+            <polygon id="Polygon" fill="#6C97BA" transform="translate(361.917894, 243.500000) rotate(90.000000) translate(-361.917894, -243.500000) " points="361.917894 -30 604.835787 106.75 604.835787 380.25 361.917894 517 119 380.25 119 106.75"></polygon>
+            <circle id="Oval-5" stroke="#FFFFFF" stroke-width="30" cx="362" cy="243" r="116"></circle>
+        </g>
+    </g>
+</svg>

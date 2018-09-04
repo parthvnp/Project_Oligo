@@ -2,14 +2,17 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% block static_files %}
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'form/css/style.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'form/css/style.css'%}">
     {% endblock static_files %}
     <title>
         {% block title %}
@@ -17,45 +20,160 @@
         {% endblock title %}
     </title>
 </head>
+
 <body>
     {% block content %}
+    <br>
+    <br>
+    <br>
+    <div  class="">
     <div class="mainForm field">
-            <div class="columns">
-                <div class="column is-8 is-centered is-offset-2 mainContent">
-                    <article class="message is-info">
-                        <div class="message-header">
-                                PyOligo
-                    
-                        </div>
-                        <div class="message-body">
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore repellendus quidem vel hic error tenetur libero sit obcaecati! Voluptate molestias tempora totam voluptatibus quae id blanditiis quisquam accusamus accusantium nihil. Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum eveniet ea pariatur? Impedit asperiores vitae dolorum harum sunt libero et? Facere alias facilis molestiae quia deleniti reiciendis odio omnis ratione. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptate, soluta! Iste saepe quidem autem perferendis reiciendis, cupiditate exercitationem quam veritatis illum, nesciunt architecto consequatur! Perspiciatis exercitationem itaque commodi! Ad, a. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Neque sunt officia labore blanditiis culpa laudantium eveniet dicta, necessitatibus id aut illum quisquam iusto nisi odit fugiat, optio pariatur eos. Non!
-                        </div>
-
-                    </article>
-                </div>
-            </div>
-
-            <div class="columns is-multiline">
-                <div class="column is-4 is-centered is-offset-2">
-                    <article class="message is-primary">
-                        <div class="message-header">Retrive Results</div>
-                        <div class="message-body">
-                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint ipsa reiciendis corrupti animi velit perspiciatis ex, esse neque molestiae vitae accusamus voluptatibus, autem est iste necessitatibus reprehenderit eius consequuntur cumque!
-                        </div>
-                    </article>
-                </div>
-                <div class="column is-4 is-centered">
-                        <article class="message is-primary">
-                            <div class="message-header">Contact Us</div>
-                            <div class="message-body">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint ipsa reiciendis corrupti animi velit perspiciatis ex, esse neque molestiae vitae accusamus voluptatibus, autem est iste necessitatibus reprehenderit eius consequuntur cumque!
-                            </div>
-                        </article>
-                    </div>
-    
-
+        <div class="column is-8 is-offset-2">
+            <div class="opener">
+                <h1 class="title" style="text-align:center">
+                    PyOligo is online tool for designing and analyzing Assembly PCR oligos.
+                </h1>
             </div>
         </div>
+
+        <br>
+        <div class="main-container">
+            <div class="columns is-multiline">
+                <div class="column is-2 is-offset-2">
+                    <img src="{% static 'form/img/analyze.svg' %}" alt="">
+                    <p style="text-align:center">
+                        <a href="{% url 'main:index'%}" class="button color-1">Design Oligos</a>
+                    </p>
+
+                </div>
+                <div class="column is-2">
+                    <img src="{% static 'form/img/results.svg' %}" alt="">
+                    <p style="text-align:center">
+                        <a href="#results" class="button color-2 ">Retrieve Results</a>
+                    </p>
+                </div>
+                <div class="column is-2">
+                    <img src="{% static 'form/img/contact.svg' %}" alt="">
+                    <p style="text-align:center">
+                        <a href="#contact" class="button color-3">Contact Us</a>
+                    </p>
+                </div>
+                <div class="column is-2">
+                    <img src="{% static 'form/img/documentation.svg' %}" alt="">
+                    <p style="text-align:center">
+                        <a href="#documentation" class="button color-4">View Documentation</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <br>
+        <br>
+        <br>
+
+
+
+        <div class="main-container">
+
+        </div>
+
+
+        <div class="main-container">
+            <div class="columns is-multiline">
+                <div class="column is-4 is-offset-2">
+                    <div class="image-1">
+                        <img src="{% static 'form/img/contact.svg'%}" alt="">
+                    </div>
+                   
+                </div>
+
+
+                <div class="column is-4">
+                    <div class="content-box" id="contact">
+                        <p>
+                            If you have any questions or concerns regarding the program, program licensing, or would like to make
+                            suggestion for a feature in the program, you can contact the Johnson Lab via the <a href = "{% url 'forms:contact'%}" class="button is-primary">
+                                <span class="icon is-small">
+                                    <i class="fas fa-edit"></i>
+                                </span>
+                                <span>contact form</span>
+                            </a> or  <a href="" class="button is-warning"><span class="icon is-small">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                                <span>email</span></a>. 
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-container">
+                <div class="columns is-multiline">
+                    <div class="column is-4 is-offset-2">
+                        <div class="content-box" id="results">
+                            <div class="field has-addons">
+                                <form action="{%url 'forms:retrieve_results'%}" method="POST">
+                                    {% csrf_token %}
+                                    <div class="field has-addons">
+                                            <p class="control is-expanded">
+                                               {{retrieval_form.sequence_id}}
+                                            </p>
+                
+                                            <p class="control">
+                                              <input type="submit" class="button color-2" >
+                                            </p>
+                                    </div>
+                                </form>
+                                
+                            </div>
+                            Results can be retrieved using the unique <code>sequence ID </code> that was provided with the output from the program. Sequence ID and its associated results are valid for a period of six months.
+                        </div>
+                    </div>
+
+    
+                    <div class="column is-4 is-offset-2">
+                        <div class="image-2">
+                            <img src="{%static 'form/img/results.svg'%}" alt="">
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+            <div class="main-container">
+                    <div class="columns is-multiline">
+                        <div class="column is-4 is-offset-2">
+                            <div class="image-3">
+                                <img src="{% static 'form/img/documentation.svg'%}" alt="">
+                            </div>
+                        </div>
+        
+        
+                        <div class="column is-4">
+                            <div class="content-box" id="documentation">
+                                <p>
+                                   The  <a class="button is-link">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-file-alt"></i>
+                                        </span>
+                                        <span>documentation</span>
+                                        </a> outlines the how to use PyOligo, gives a brief overview of the algorithms used in designing the oligos and provides a guide to
+                                   <a class="button is-danger">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-cogs"></i>
+                                        </span>
+                                        <span>troubleshoot</span>
+                                        </a>
+                                   any errors the program might encounter. 
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+    </div>
     {% endblock content %}
 </body>
+
 </html>
