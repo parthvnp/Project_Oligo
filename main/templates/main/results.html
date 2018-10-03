@@ -75,7 +75,6 @@
                                         <th>Length</th>
                                         <th>Melt Temperature (&deg;C) </th>
                                         <th>GC Content (%)</th>
-                                        <th>Consecutive GC </th>
                                     </tr>
                                 </thead>
                                     {% for oligo in output_oligos_profile %}
@@ -85,7 +84,6 @@
                                         <td> <span class="table-highlighter-6">{{oligo.2}}   </span></td>
                                         <td>   <span class="table-highlighter-6">{{oligo.3}}   </span></td>
                                         <td> <span class="table-highlighter-6">{{oligo.4}}   </span></td>
-                                        <td>  <span class="table-highlighter-6">{{oligo.5}}   </td>
                                     </tr>
                                     {% endfor %}
                             </table>
@@ -102,37 +100,23 @@
                     <div class="sequence-header">
                         Primer Dimer Formation
                     </div>
-                    <div class="sequence-contianer">
+                    <div class="sequence-container">
                         {% if primer_dimer %}
                         {% for primer in primer_dimer  %}
                         <pre class="preserve-space">
-<span class="is-heading-1">{{dimer.0.0}}</span> <span class="is-heading-2">{{dimer.0.1}} </span> <span class="is-heading-4">{{dimer.0.3}}</span> 
+<span class="is-heading-1">{{primer.0.1}}</span>  <span class="is-heading-2">{{primer.0.1}}</span>  <span class="is-heading-3">{{primer.0.2}}</span>  <span class="is-heading-4">{{primer.0.3}}</span>
 
-
-<span class="primer-highlighter">{{dimer.0.4}}</span> 
-                        
+<span class="primer-highlighter">{{primer.0.4}}</span>
+                        </pre>
                         {% endfor %}
+                        
                         {% else %}
-                        <div class="sequence-container">
-                            <br>
-                            <br>
-                                <span class="not-found">No valid primer dimers were found. </span>
-                                <br>
-                                <br>
-                        </div>
-
                         {% endif %}
-                    </pre>
-                           
-                           
-                        
-                        
                     </div>
                 </div>
 
             </div>
 
-         
             
 
             <div class="field">
@@ -163,21 +147,40 @@
                         
                         {% endfor %}
                         {% else %}
-                        <code>No valid secondary structure </code>
+                        <code> No valid secondary structure were found. </code>
                         {% endif %}
                     </table>
                     </pre>
                     </div>
 
                 </div>
-                <div class="field">
+                
+
+            <div class="field">
                     <div class="control">
-                        <a href="{% url 'main:download' result_id %}" target="_blank" data-tooltip="Download your results in text format"><button class="button is-link " style="font-weight:bold">Download Results</button></a>
+                        <div class="sequence-header">Warnings</div>
+                        <div class="sequence-container more-padding">
+            <br>
+                        {% for oligo in output_oligos_profile  %}
+                        {% if oligo.5 == True %}
+  <span class="is-heading-1">{{oligo.0}}</span> <span class="warning-text"> has four or more consectuve base pairs that are identical. </span> <br>
+  <br>
+                        {% else %}
+                        {% endif %}
+                        
+                        {% endfor %}
+                    
                     </div>
+                    </div>
+                </div>
+    
+        </div>
+        <div class="field">
+                <div class="control">
+                    <a href="{% url 'main:download' result_id %}" target="_blank" data-tooltip="Download your results in text format."><button class="button is-link " style="font-weight:bold">Download Results</button></a>
                 </div>
             </div>
         </div>
-        
         
     </div>
 

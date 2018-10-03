@@ -10,10 +10,10 @@ class SequenceInput(models.Model):
     sequence_name = models.CharField(max_length=60, default=datetime.datetime.now())
     sequence = models.TextField()
     max_Length = models.PositiveIntegerField(choices=choices.SIZE_CHOICES, default=50)
-    melt_Tm = models.PositiveIntegerField(default=55)
+    melt_Tm = models.FloatField(default=55)
     algorithm = models.CharField(choices=choices.ALGORITHM_CHOICES, default="Zuker", max_length=20)
-    oligo_concentration = models.PositiveIntegerField(default=0.25e-6)
-    monovalent_concentration = models.PositiveIntegerField(default=50e-3)
+    oligo_concentration = models.FloatField(default=0.25e-6)
+    monovalent_concentration = models.FloatField(default=50e-3)
 
 class SequenceOutput(models.Model):
     sequence = models.OneToOneField(SequenceInput, on_delete=models.CASCADE, primary_key=True)

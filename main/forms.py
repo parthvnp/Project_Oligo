@@ -11,9 +11,9 @@ class SequenceForm(forms.Form):
 
     melt_Tm = forms.DecimalField(required=True, widget=forms.TextInput(attrs={"class": "input is-link inputText", "name": "melt_Tm", "value": 55}), min_value=50, max_value=65)
 
-    oligo_concentration = forms.DecimalField(required=True, widget=forms.TextInput(attrs={ "name": "oligo_concentration" , "class": "input inputText", "value": 0.25}) , min_value=1.0e-12,max_value=10)
+    oligo_concentration = forms.FloatField(required=True, widget=forms.TextInput(attrs={ "name": "oligo_concentration" , "class": "input inputText", "value": 0.25}) , min_value=1.0e-12,max_value=100)
 
-    monovalent_concentration = forms.DecimalField(required=True, widget=forms.TextInput(attrs={ "name": "monovalent_concentration",  "class": "input inputText", "value": 5}), min_value = 1.0e-12, max_value=10)
+    monovalent_concentration = forms.FloatField(required=True, widget=forms.TextInput(attrs={ "name": "monovalent_concentration",  "class": "input inputText", "value": 50}), min_value = 1.0e-12, max_value=100)
 
 
 

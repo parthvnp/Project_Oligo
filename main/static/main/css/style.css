@@ -461,3 +461,15 @@ code{
     padding: 10px 15px; 
 
 }
+
+.warning-text{
+    font-family: "Consolas";
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 25px;
+    margin-right: 25px;
+    padding: 10px 15px; 
+
+}
+

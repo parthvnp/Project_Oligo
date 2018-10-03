@@ -28,7 +28,7 @@ class bcolors:
 
 class EquiTmOligo(object):
 
-    def __init__(self, sequence, min_tm=55.0, min_oligo_length=15, max_oligo_length=60, oligo_conc=0.25e-6, monovalent=50e-3, divalent=0.0, correction_type="DEFAULT"):
+    def __init__(self, sequence, min_tm, min_oligo_length, max_oligo_length, oligo_conc, monovalent, divalent=0.0, correction_type="DEFAULT"):
         self.sequence = self.remove_whitespaces(sequence)
         self.sequence_length = len(self.sequence)
         self.min_tm = min_tm
@@ -178,34 +178,26 @@ class EquiTmOligo(object):
         if alter_avg_size:
             avg_size = alter_avg_size
         else:
-            avg_size = int((self.max_oligo_length + self.min_oligo_length)/2)
-        if self.min_tm < 60:
-            overlap = 10
-        elif self.min_tm < 70:
-            overlap = 12
-        else:
-            overlap = 14
-
-        minimum_oligos = math.ceil((self.sequence_length - avg_size)/(avg_size - overlap))
-        minimum_oligos = minimum_oligos + 1
+            avg_size = self.max_oligo_length - 15
+        overlap = 10
 
         temp_i = 0
         temp_j = avg_size
         is_success = True
-        primers_index = np.zeros(shape=(minimum_oligos, 3), dtype=np.int16)
-        for j in range(1, minimum_oligos + 1):
+        primers_index = []
+        j = 0 #counter for sequence formation
+        while (temp_i < self.sequence_length) and (temp_j < self.sequence_length):
             if j % 2 != 0:
-                primers_index[j-1, 0] = temp_i
-                primers_index[j-1, 1] = temp_j
-                primers_index[j-1, 2] = 1
-                temp_i = temp_j - overlap
+                primers_index.append([temp_i, temp_j, 1]) # 1 for forward strand, -1 for reverse
+                temp_i = temp_j + overlap
                 temp_j = temp_i + avg_size
+                j += 1
             if j % 2 == 0:
-                primers_index[j-1, 0] = temp_i
-                primers_index[j-1, 1] = temp_j
-                primers_index[j-1, 2] = -1
-                temp_i = temp_j - overlap
+                primers_index.append([temp_i, temp_j, -1])
+                temp_i = temp_j + overlap
                 temp_j = temp_i + avg_size
+                j += 1
+        primers_index = np.array(primers_index, dtype=np.int16)
         if primers_index[-1, 1] == self.sequence_length:
             primers_index[-1,1] = self.sequence_length - 1
             Warning = "NA"
@@ -253,9 +245,34 @@ class EquiTmOligo(object):
             return array_index
 
 
-    def dna_fragmentation(self):
+    def main_primers_index(self,):
+        """ Returns primer index for initial fragmentation of sequence."""
+        overlap = 20
+        oligo_length = int((self.max_oligo_length -  8))
+        if self.sequence_length % (oligo_length - overlap) == 0:
+            minimum_oligos = self.sequence_length//(oligo_length - overlap)
+        else:
+            minimum_oligos = self.sequence_length // (oligo_length - overlap) + 1
+        primers_index = np.zeros(shape=(minimum_oligos, 3), dtype=np.int16)
+        sequence_start = 0
+        sequence_stop = oligo_length
+        min_acceptable_distance = 5
+        for i in range(minimum_oligos):
+            if i % 2 == 0:
+                primers_index[i] = [sequence_start, sequence_stop, 1] # 1 for forward strand, -1 for reverse
+                sequence_start = sequence_stop - overlap
+                sequence_stop = sequence_start + oligo_length
+            else:
+                primers_index[i] = [sequence_start, sequence_stop, -1] # 1 for forward strand, -1 for reverse
+                sequence_start = sequence_stop - overlap
+                sequence_stop = sequence_start + oligo_length
+        primers_index[primers_index > self.sequence_length - 1] = self.sequence_length - 1
+        return primers_index
 
-        primers_index = self.primers_index_readjustment()
+    def dna_fragmentation(self):
+        """Fragments DNA into short pieces """
+
+        primers_index = self.main_primers_index()
 
         for base in self.sequence:
             if base not in ACCEPTABLE_BASES:
@@ -267,7 +284,6 @@ class EquiTmOligo(object):
         if self.min_tm > 70 or self.min_tm < 55:
             raise CustomExceptions.InvalidTemperature
            
-
         if primers_index.shape[0] < 2:
             raise CustomExceptions.InvalidLength
 
@@ -295,7 +311,7 @@ class EquiTmOligo(object):
                             melt_tm = self.Tm_DNA(sequence=self.sequence[int(oligo_index[0]):int(oligo_index[1]+1)])
                         temp_i = temp_i + 1
                 oligos_overlap_index.append([oligo_index[0], oligo_index[1]])
-                oligos_tm[self.sequence[oligo_index[0], oligo_index[1]+1]] = melt_tm
+                oligos_tm[self.sequence[oligo_index[0] : oligo_index[1]+1]] = melt_tm
 
             elif melt_tm < default_tm:
                 while melt_tm <= default_tm - 3:
@@ -321,9 +337,8 @@ class EquiTmOligo(object):
             primers_index[j-1,1] = i[1]
         
         primer_check_temp_value = 2
-
         while primer_check_temp_value < primers_index.shape[0]:
-            if primers_index[primer_check_temp_value][0] - primers_index[primer_check_temp_value-2][1] >= 5:
+            if primers_index[primer_check_temp_value][0] - primers_index[primer_check_temp_value-2][1] >= 2:
                 primer_check_temp_value = primer_check_temp_value + 1
             else:
                 raise CustomExceptions.UnexpectedError
@@ -336,7 +351,6 @@ class EquiTmOligo(object):
     def consecutive_basepair_check(self, sequence):
         try:
             possible_pairs = [match[0] for match in re.findall(r'((\w)\2{3,})', sequence)]
-            print(possible_pairs)
         except Exception as e:
             raise CustomExceptions.UnexpectedError
         if len(possible_pairs) >=1 :
@@ -385,6 +399,7 @@ class EquiTmOligo(object):
         forward_primer, reverse_primer, fwd, rev = self.design_flanking_primers()
         oligo_profile.append(("FWD_PRIMER", fwd, len(fwd), self.Tm_DNA(fwd), self.GC_content(fwd), "NA"))
         oligo_profile.append(("REV_PRIMER", rev, len(rev), self.Tm_DNA(rev), self.GC_content(rev), "NA" ))
+
 
         return oligo_profile
 
@@ -458,8 +473,6 @@ class EquiTmOligo(object):
                 interaction[i] = "|"
             counter = counter + 4
 
-            # interaction[inter_stop] = interaction[inter_stop] + " " + f"{int(temp):.2f}"
-
 
         forward_seq = "".join(forward_seq)
         interaction = "".join(interaction)
@@ -473,11 +486,11 @@ class EquiTmOligo(object):
         fwd_primers = ""
         rev_primers = ""
         for index, fwd in enumerate(forward_primers):
-            assert len(fwd) <= self.max_oligo_length
+            assert len(fwd) <= self.max_oligo_length, "No valid oligos were found using the provided parameters."
             fwd_primers = fwd_primers + "\n" + str(index+1) + "F" + "  " + fwd + "   " + str(len(fwd))
 
         for index, rev in enumerate(reverse_primers):
-            assert len(rev) <= self.max_oligo_length
+            assert len(rev) <= self.max_oligo_length, "No valid oligos were found using the provided parameters."
             rev_primers = rev_primers + "\n" + str(index+1) + "R" + "  " + rev + "  " + str(len(rev))
 
 
