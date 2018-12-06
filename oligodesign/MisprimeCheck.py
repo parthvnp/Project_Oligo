@@ -355,5 +355,5 @@ def main_misprime_check(name1, name2, sequence1, sequence2, Tm_value, heterodime
 
     except Exception as e:
 
-        return (f"An error occured while processing the input.")
+        return (f"An error occurred while processing the input.")
 

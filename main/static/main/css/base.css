@@ -76,10 +76,10 @@ form{
 .content-tag{
     background: #bbbbb7f1;
     color:#417cda;
-    font-size: 25px;
+    font-size: 20px;
     line-height: 1.5em;
     margin-bottom: 5px;
-    padding-left: 1em;
+    padding: 0.2em;
     font-weight: bold;
     font-family: "Consolas";
     border-radius: 3px;

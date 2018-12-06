@@ -48,14 +48,14 @@
             </div>
             <div class="sequence-body">
                 <pre class="preserve-space">
-<span class="color-1" style="font-weight:bold">{{output_oligos.0}}</span>
+<span class="color-2" style="font-weight:bold">{{output_oligos.5}}</span>
 
 <span class="color-2" style="font-weight:bold">{{output_oligos.1}}</span>
 <span class="color-3" style="font-weight:bold">{{output_oligos.2}}</span>
 <span class="color-4" style="font-weight:bold">{{output_oligos.3}}</span>
 <span class="color-3" style="font-weight:bold">{{output_oligos.4}}</span>
 
-<span class="color-2" style="font-weight:bold">{{output_oligos.5}}</span>
+<span class="color-1" style="font-weight:bold">{{output_oligos.0}}</span>
 </pre>
             </div>
 
@@ -104,7 +104,7 @@
                         {% if primer_dimer %}
                         {% for primer in primer_dimer  %}
                         <pre class="preserve-space">
-<span class="is-heading-1">{{primer.0.1}}</span>  <span class="is-heading-2">{{primer.0.1}}</span>  <span class="is-heading-3">{{primer.0.2}}</span>  <span class="is-heading-4">{{primer.0.3}}</span>
+<span class="is-heading-1">{{primer.0.0}}</span>  <span class="is-heading-2">{{primer.0.1}}</span>  <span class="is-heading-3">{{primer.0.2}}</span>  <span class="is-heading-4">{{primer.0.3}}</span>
 
 <span class="primer-highlighter">{{primer.0.4}}</span>
                         </pre>
@@ -126,7 +126,7 @@
                     </div>
                     <div class="sequence-container">
                         {% if secondary_structure %}
-                        <pre class="preserver-sapce">
+                        <pre class="preserver-space">
 
                         <table class="table">
                             <thead>
@@ -159,17 +159,20 @@
             <div class="field">
                     <div class="control">
                         <div class="sequence-header">Warnings</div>
-                        <div class="sequence-container more-padding">
+                        <div class="warning-container">
             <br>
                         {% for oligo in output_oligos_profile  %}
                         {% if oligo.5 == True %}
-  <span class="is-heading-1">{{oligo.0}}</span> <span class="warning-text"> has four or more consectuve base pairs that are identical. </span> <br>
-  <br>
+                            <div class="field">
+                                <div class="control">
+                         <span class="is-heading-1">{{oligo.0}}</span> <span class="warning-text"> has four or more consecutive base pairs that are identical. </span> 
+                                </div>
+                            </div>
+    
+
                         {% else %}
-                        {% endif %}
-                        
+                        {% endif %}  
                         {% endfor %}
-                    
                     </div>
                     </div>
                 </div>

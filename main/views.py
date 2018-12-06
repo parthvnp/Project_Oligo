@@ -57,24 +57,27 @@ def viewResults(request, result_id):
         output_oligos = output_oligos[1]
         output_oligo_profile = output.oligos_representation()
         primer_dimer = output.primer_dimer_check()
-        secondary_structure = output.SecondaryStructureCheck()
-        context = {"output_oligos": output_oligos, "result_id": result_id, "primer_dimer": primer_dimer, "secondary_structure": secondary_structure, "sequence_name": sequence_name, "result_id": result_id, "output_oligos_profile": output_oligo_profile}
+        # secondary_structure = output.SecondaryStructureCheck()
+        context = {"output_oligos": output_oligos, "result_id": result_id, "primer_dimer": primer_dimer, "sequence_name": sequence_name, "result_id": result_id, "output_oligos_profile": output_oligo_profile}
+
+        # output values for downloading results
+        results_sequence_info = output.write_sequence_info()
+        results_oligo_info = output.write_oligos_info()
+        primer_dimer_info = output.write_primer_dimer_info()
+        try:
+            sequence_output = SequenceOutput.objects.get(sequence__id=result_id)
+        except ObjectDoesNotExist:
+            s2 = SequenceOutput.objects.create(sequence=s1, output_oligos=results_oligo_info, primer_dimers=primer_dimer_info, assembly_scheme=output_oligos, all_results_url=reverse("main:results", args=[s1.id]))
         return render (request, "main/results.html", context)
     elif output_oligos[0] == False:
         context = {"output_oligos": output_oligos}
         return render(request, "main/error.html", context)
     else:
         return render(request, "404.html")
-    try:
-        sequence_output = SequenceOutput.objects.get(sequence__id=result_id)
-    except ObjectDoesNotExist:
-        s2 = SequenceOutput.objects.create(sequence=s1, output_oligos= output_oligo_profile, primer_dimers=primer_dimer, assembly_schem=output_oligos, secondary_structure=secondary_structure, all_results_url=reverse("main:results", args=[s1.id]))
-    
         
 def downloadResults(request, sequence_id):
     filename = "results.txt"
     results = SequenceOutput.objects.get(sequence__id=sequence_id)
-    print(results)
 
     try:
         results = SequenceOutput.objects.get(sequence__id=sequence_id)
@@ -86,11 +89,17 @@ def downloadResults(request, sequence_id):
         output_oligos = (False, "ERROR403: Forbidden Request", "You do not have access to the requested resource.")
         context = {"output_oligos" : output_oligos}
         return render(request, "main/error/html", context)
-    
-    oligos = results.output_oligos
-    secondary_structure = results.secondary_structure
-    content = assembly_scheme
-    response = HttpResponse(content, content_type="text/plain")
+
+    output_content ="Sequence: " +  results.sequence.sequence + "\n\n" + "Sequence Name: " + results.sequence.sequence_name + "\n\n" + "Sequence ID: " +  str(results.sequence.id) + "\n\n" + results.output_oligos + "\n\n" + results.primer_dimers + "\n\n"
+
+    response = HttpResponse(output_content, content_type="text/plain")
     response['Content-Disposition'] = 'attachment; filename=results.txt'
     return response
 
+
+
+    
+    
+    
+
+    

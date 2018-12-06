@@ -6,7 +6,7 @@ import time
 import math
 from oligodesign import CustomExceptions
 from oligodesign import MisprimeCheck
-import oligodesign.SecondaryStructureCheck.SecondaryStructCheck as SecondaryStruct
+# import oligodesign.SecondaryStructureCheck.SecondaryStructCheck as SecondaryStruct
 from colorama import Fore, Style, Back
 import time
 from random import choice
@@ -384,7 +384,7 @@ class EquiTmOligo(object):
                 oligo_melt_Tm = self.Tm_DNA(sequence=oligo[0])
                 oligo_melt_Tm = round(oligo_melt_Tm, 2)
                 oligo_GC_content = self.GC_content(sequence=oligo[0])
-                oligo_name = str(forward_counter)+"_FORWARD"
+                oligo_name = str(forward_counter)+"_REVERSE"
                 oligo_profile.append((oligo_name, oligo[0], oligo_length, oligo_melt_Tm, oligo_GC_content, consecutive_GC))
                 forward_counter = forward_counter + 1
             elif oligo[1] == 1:
@@ -393,7 +393,7 @@ class EquiTmOligo(object):
                 oligo_melt_Tm = self.Tm_DNA(sequence=oligo[0])
                 oligo_melt_Tm = round(oligo_melt_Tm, 2)
                 oligo_GC_content = self.GC_content(sequence=oligo[0])
-                oligo_name = str(reverse_counter)+"_REVERSE"
+                oligo_name = str(reverse_counter)+"_FORWARD"
                 oligo_profile.append((oligo_name, oligo[0],oligo_length, oligo_melt_Tm, oligo_GC_content, consecutive_GC ))
                 reverse_counter = reverse_counter + 1
         forward_primer, reverse_primer, fwd, rev = self.design_flanking_primers()
@@ -405,12 +405,12 @@ class EquiTmOligo(object):
 
     def design_flanking_primers(self):
         sequence_reverse = self.dna_complement(self.sequence)
-        forward_primer = sequence_reverse[0]
+        forward_primer = self.sequence[0]
         counter_fwd, counter_rev = 1, -2
-        reverse_seq = self.sequence
+        reverse_seq = sequence_reverse
         reverse_primer = reverse_seq[-1]
         while self.Tm_DNA(sequence=forward_primer) <= self.min_tm and counter_fwd < self.sequence_length:
-            forward_primer = forward_primer + sequence_reverse[counter_fwd]
+            forward_primer = forward_primer + self.sequence[counter_fwd]
             counter_fwd = counter_fwd + 1
         while self.Tm_DNA(sequence=reverse_primer) <= self.min_tm and counter_rev > -self.sequence_length:
             reverse_primer = reverse_primer + reverse_seq[counter_rev]
@@ -419,8 +419,8 @@ class EquiTmOligo(object):
         reverse_primer = reverse_primer[::-1]
         rev_primer = reverse_primer
         fwd_primer = forward_primer
-        forward_primer = "3'- " + forward_primer + " -5'"
-        reverse_primer = "5'- " + reverse_primer + " -3'"
+        forward_primer = "5'- " + forward_primer + " -3'"
+        reverse_primer = "3'- " + reverse_primer + " -5'"
         rev_primer_lst = [" "] * (self.sequence_length + 8 )
         for rev in range(1, len(reverse_primer) + 1):
             assert len(reverse_primer) < self.sequence_length
@@ -499,7 +499,26 @@ class EquiTmOligo(object):
         reverse_sequence = self.dna_complement(self.sequence)
         return (fwd_flanking, forward_seq, interaction, reverse_seq, interaction2, rev_flanking)
 
-   
+    def write_sequence_info(self):
+        output_sequence = self.sequence + "\n\n" 
+        return output_sequence
+    
+    def write_oligos_info(self):
+        oligos = self.oligos_representation()
+        output_headers = ("Sequence Name", "Sequence", "Length", "Tm", "GC Content")
+        output_oligos = "Sequence Name,  Sequence, Length, Tm, GC%" + "\n"
+        for i in oligos:
+            temp_output = f"{i[0]}, {i[1]}, {i[2]}, {i[3]}, {i[4]}" + "\n"
+            output_oligos = output_oligos + temp_output
+        return output_oligos
+
+    def write_primer_dimer_info (self):
+        primer_dimer = self.primer_dimer_check()
+        output_dimers = "Primer Dimers " + "\n"
+        for primer in primer_dimer:
+            output_dimers = output_dimers + primer[0][0] + primer[0][1] + primer[0][2] + "\n"
+        return output_dimers
+
     def main(self):
         is_valid = False
         try:
@@ -532,24 +551,26 @@ class EquiTmOligo(object):
             
     def primer_dimer_check(self):
             primer_dimer_list = []
-            oligo_list = self.oligos_representation()[:-2]
+            oligo_list = self.oligos_representation()[:-2] # not selecting for primers
             for o1 in range(len(oligo_list)):
                 for o2 in range(len(oligo_list)):
-                    if o1 != o2:
+
+                    if o1 != o2 and (oligo_list[o1][0][0] != oligo_list[o2][0][0]) and (o2 > o1): # make sure that they are not the primers you are interested in as in 1_F and 1_R
                         reverse_sequence = oligo_list[o2][1][::-1]
                         primer_dimer = MisprimeCheck.main_misprime_check(oligo_list[o1][0], oligo_list[o2][0], oligo_list[o1][1], reverse_sequence, Tm_value=self.min_tm)
                         if primer_dimer != []:
                             primer_dimer_list.append(primer_dimer)
             return primer_dimer_list[0:4]
 
-    def SecondaryStructureCheck(self):
-        secondary_structure_list = []
-        oligo_list = self.oligos_representation()[:-2]
-        for oligo in oligo_list:
-            secondary_structure = SecondaryStruct.ZukerPredictor(oligo[1])
-            secondary_structure_output = secondary_structure.mfe_fold_output()
-            secondary_structure_output.append(oligo[0])
-            secondary_structure_list.append(secondary_structure_output)
-        most_stable_structure = sorted(secondary_structure_list, key=lambda x: x[2], reverse=False)
-        return most_stable_structure[0: 4]
+
+    # def SecondaryStructureCheck(self):
+    #     secondary_structure_list = []
+    #     oligo_list = self.oligos_representation()[:-2]
+    #     for oligo in oligo_list:
+    #         secondary_structure = SecondaryStruct.ZukerPredictor(oligo[1])
+    #         secondary_structure_output = secondary_structure.mfe_fold_output()
+    #         secondary_structure_output.append(oligo[0])
+    #         secondary_structure_list.append(secondary_structure_output)
+    #     most_stable_structure = sorted(secondary_structure_list, key=lambda x: x[2], reverse=False)
+    #     return most_stable_structure[0: 4]
 

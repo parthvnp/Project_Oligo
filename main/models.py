@@ -20,5 +20,4 @@ class SequenceOutput(models.Model):
     output_oligos = models.TextField(max_length=8000)
     primer_dimers = models.TextField(max_length=8000)
     assembly_scheme = models.TextField(max_length=8000, default="Not provided")
-    secondary_structure = models.TextField(max_length=8000)
     all_results_url = models.URLField( max_length=300)
