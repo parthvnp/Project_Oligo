@@ -1,13 +1,10 @@
 import numpy as np
 import re
-import os
-import traceback as tb
 import time
 import math
 from oligodesign import CustomExceptions
 from oligodesign import MisprimeCheck
 # import oligodesign.SecondaryStructureCheck.SecondaryStructCheck as SecondaryStruct
-from colorama import Fore, Style, Back
 import time
 from random import choice
 import re
@@ -96,7 +93,7 @@ class EquiTmOligo(object):
         return complement
 
     def remove_whitespaces(self, sequence):
-        sequence = sequence.replace(" ", "")
+        sequence = re.sub(r"\s+", "", sequence)
         return sequence.upper()
 
     def reverse_complement(self, sequence):
@@ -112,7 +109,7 @@ class EquiTmOligo(object):
                 content = content + 1
         content_percentage = content/len(sequence)
         content_percentage = content_percentage * 100
-        content_percentage = round(content_percentage, 2) 
+        content_percentage = round(content_percentage, 2)
         return content_percentage
 
     def Tm_DNA(self,sequence):
@@ -280,10 +277,10 @@ class EquiTmOligo(object):
                 break
         if self.min_oligo_length > self.sequence_length:
             raise CustomExceptions.InvalidLength
-            
+
         if self.min_tm > 70 or self.min_tm < 55:
             raise CustomExceptions.InvalidTemperature
-           
+
         if primers_index.shape[0] < 2:
             raise CustomExceptions.InvalidLength
 
@@ -335,7 +332,7 @@ class EquiTmOligo(object):
         for i,j in zip(oligos_overlap_index, range(1, len(oligos_overlap_index) + 1)):
             primers_index[j,0] = i[0]
             primers_index[j-1,1] = i[1]
-        
+
         primer_check_temp_value = 2
         while primer_check_temp_value < primers_index.shape[0]:
             if primers_index[primer_check_temp_value][0] - primers_index[primer_check_temp_value-2][1] >= 2:
@@ -343,8 +340,8 @@ class EquiTmOligo(object):
             else:
                 raise CustomExceptions.UnexpectedError
                 break
-           
-            
+
+
         return (oligos_overlap_index, oligos_tm, primers_index)
 
 
@@ -425,11 +422,11 @@ class EquiTmOligo(object):
         for rev in range(1, len(reverse_primer) + 1):
             assert len(reverse_primer) < self.sequence_length
             rev_primer_lst[-rev] = reverse_primer[-rev]
-        
+
         reverse_primer = "".join(rev_primer_lst)
         return forward_primer, reverse_primer, fwd_primer, rev_primer
 
-        
+
     def dna_representation(self):
         ( overlap_index, overlap_dictionary, primer_set) = self.dna_fragmentation()
         fwd_flanking, rev_flanking, fwd, rev = self.design_flanking_primers()
@@ -437,14 +434,14 @@ class EquiTmOligo(object):
         sequence_index = []
         forward_primers = []
         reverse_primers = []
-        forward_seq = [" "] * self.sequence_length 
-        interaction = [" "] * self.sequence_length 
+        forward_seq = [" "] * self.sequence_length
+        interaction = [" "] * self.sequence_length
         fwd_arrow = [" "] * self.sequence_length
         rev_arrow = [" "] * self.sequence_length
         sequence_complement = self.dna_complement(self.sequence)
         reverse_seq = [" "] * len(sequence_complement)
 
-        
+
         for primer in primer_set:
             seq_start, seq_stop, direction = primer[0], primer[1], primer[2]
 
@@ -480,7 +477,7 @@ class EquiTmOligo(object):
         interaction2 = "".join(interaction2[0: -counter])
         forward_seq = "5'- " + forward_seq + " -3'"
         interaction = "    " + interaction + "    "
-        interaction2 = "   " + interaction2 + "     " 
+        interaction2 = "   " + interaction2 + "     "
         reverse_seq = "3'- " + reverse_seq + " -5'"
 
         fwd_primers = ""
@@ -500,9 +497,9 @@ class EquiTmOligo(object):
         return (fwd_flanking, forward_seq, interaction, reverse_seq, interaction2, rev_flanking)
 
     def write_sequence_info(self):
-        output_sequence = self.sequence + "\n\n" 
+        output_sequence = self.sequence + "\n\n"
         return output_sequence
-    
+
     def write_oligos_info(self):
         oligos = self.oligos_representation()
         output_headers = ("Sequence Name", "Sequence", "Length", "Tm", "GC Content")
@@ -544,11 +541,11 @@ class EquiTmOligo(object):
             error_code = "ERROR500: Internal Server Error"
             is_valid = False
             return  is_valid, error_code, "The server encountered an unexpected error"
-        
+
         else:
             is_valid = True
             return is_valid, output_oligos
-            
+
     def primer_dimer_check(self):
             primer_dimer_list = []
             oligo_list = self.oligos_representation()[:-2] # not selecting for primers
