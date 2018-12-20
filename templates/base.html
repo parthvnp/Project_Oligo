@@ -9,6 +9,7 @@
     {% block static_files %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/balloon-css/0.5.0/balloon.min.css">
     <link rel="stylesheet" href="{% static 'form/css/style.css' %}">
     {% endblock static_files %}
     <title>
@@ -47,14 +48,11 @@
                                 Troubleshoot
                             </a>
                             <hr class="navbar-divider">
-                            <div class="navbar-item">
-                                Version 0.0.1
-                            </div>
+                            
                         </div>
                     </div>
-                    <a href="{% url 'forms:contact'%}" class="navbar-item">Contact</a>
-                    <a href="{% url 'forms:contact'%}" class="navbar-item">References</a>
-                    <a href="{% url 'forms:contact'%}" class="navbar-item">Demo</a>
+                    <a href="{% url 'forms:references'%}" class="navbar-item">References</a>
+                    <a href="{% url 'forms:tutorial'%}" class="navbar-item">Tutorial</a>
 
                 </div>
             </div>

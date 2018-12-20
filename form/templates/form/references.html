@@ -1,0 +1,59 @@
+{% extends "base.html" %} 
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"> 
+    {% block static_files %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+        crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/balloon-css/0.5.0/balloon.min.css">
+        <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+    {% endblock static_files %}
+    
+    <title>
+        {% block title %} PyOligo - form {% endblock title %}
+    </title>
+</head>
+
+<body>
+    {% block content %}
+    
+    <div class="columns">
+        <div class="column is-8 is-offset-2">
+            <br>
+            <br>
+            <br>
+            <span class="is-title-3">References</span>
+            <br>
+            <div class="content-box-2">
+                <p>
+                        1. Bode M, Khor S, Ye H, Li MH, Ying JY. 2009. TmPrime: Fast, flexible oligonucleotide design software for gene synthesis. Nucleic Acids Res. 37:214–221. doi:10.1093/nar/gkp461.
+                </p>
+                <br>
+                <p>
+                        2. Miklós I. 2010. RNA Structure Prediction. Methods Mol. Biol. 673:19–36. doi:10.1007/978-1-60761-842-3.
+
+                </p>
+                <br>
+                <p>
+                        3. SantaLucia J, Hicks D. 2004. The Thermodynamics of DNA Structural Motifs. Annu. Rev. Biophys. Biomol. Struct. 33:415–440. doi:10.1146/annurev.biophys.32.110601.141800.
+                </p>
+<br>
+                <p>
+                        4. Vallone PM, Butler JM. 2004. AutoDimer: A screening tool for primer-dimer and hairpin structures. Biotechniques 37:226–231. doi:10.2144/04372ST03.
+
+                </p>
+
+
+
+            </div>
+        </div>
+       
+    </div>
+
+    {% endblock content%}

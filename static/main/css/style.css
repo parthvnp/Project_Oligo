@@ -488,4 +488,16 @@ code{
     padding-bottom: 15px;
     
     }
-    
+
+
+
+.content-box-3{
+        background: #f5f5f5;
+        border-radius: 10px;
+        padding: 20px 20px;
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        display: block;
+    }
+

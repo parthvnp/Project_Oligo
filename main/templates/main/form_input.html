@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
         crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/balloon-css/0.5.0/balloon.min.css">
         <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
     {% endblock static_files %}
     
@@ -26,12 +27,14 @@
     <br>
     <div class="columns">
         <div class="column is-6 is-offset-2">
-                <h2><span><a class="button is-title-1">
+                <h2><span
+                    ><span class="is-title-1">
                         <span class="icon is-small">
                             <i class="fas fa-book"></i>
                         </span>
                         <span>Instructions</span>
-                    </a></span> </h2>
+                    </span>
+                </span> </h2>
         </div>
     </div>
     
@@ -44,7 +47,7 @@
                     <code>DNA Sequence</code> : The DNA sequence must be a valid sequence comprising only A,T,C, and G base pairs (case insensitive).
                 </li>
                 <li>
-                    <code>Maximum Length</code> : Maximum acceptable length of the oligo. The deafult value is 50 nts.
+                    <code>Maximum Primer Length</code> : Maximum acceptable length of the oligo. The deafult value is 50 nts.
                 </li>
                 <li>
                     <code>Melt Temperature</code> : The average melt temperature (&#177;3) of overlapping regions.
@@ -63,21 +66,21 @@
         {% csrf_token %}
         <div class="columns is-multiline">
             <div class="column is-6 is-offset-2">
-                    <h2><span><a class="button is-title-2">
+                    <h2><span><span class="is-title-2">
                                 <span class="icon is-small">
                                     <i class="fas fa-file-import"></i>
                                 </span>
                                 <span>Main Input</span>
-                            </a></span> </h2>
+                            </span></span> </h2>
                 
             </div>
             <div class="column is-4">
-                    <h2><span id="added-space"><a class="button is-title-3">
+                    <h2><span id="added-space"><span class="is-title-3">
                                 <span class="icon is-small">
                                     <i class="fas fa-sliders-h"></i>
                                 </span>
                                 <span>Advanced Options </span>
-                            </a></span> </h2>
+                            </span></span> </h2>
                 
             </div>
             
@@ -107,7 +110,7 @@
                             
                         <div class="field">
                             <p class="control is-expanded">
-                                <label for="max_Lenght"> <code> Maximum Length </code> </label>
+                                <span data-balloon="Maximum primer length can be either 50, 60 or 70 nts." data-balloon-pos="right" data-balloon-visible data-balloon-length="large"><label for="oligo_concentration"><code >Maximum Primer Length</code></label></span>
                             </p>
                             <p class="control">
                                 <div class="select is-fullwidth">
@@ -116,7 +119,7 @@
                             </p>
                         </div>
                             <div class="control">
-                                <label for="melt_Tm"><code> Melt Temperature </code></label>
+                                <span data-balloon="The melt temperature can be between and including 55-70 &deg;C." data-balloon-pos="right" data-balloon-visible data-balloon-length="fit"><label for="oligo_concentration"><code >Overlap Melt Temperature</code></label></span>
                             </div>
                         <div class="field has-addons">
                                 <p class="control">
@@ -131,7 +134,7 @@
 
 
                         <div class="control">
-                            <label for="oligo_concentration"><code>Oligo Concentration</code></label>
+                            <span data-balloon="Oligo concentration should be in the range of 0.1-0.4  &#181;M. " data-balloon-pos="right" data-balloon-visible data-balloon-length="large"><label for="oligo_concentration"><code >Oligo Concentration</code></label></span>
                         </div>
                         <div class="field has-addons">
                             <p class="control">
@@ -146,7 +149,7 @@
 
                         
                             <p class="control">
-                                <label for="monovalent_concentration"> <code> Na<sup>+</sup> Concentration </code> </label>
+                                    <span data-balloon="Monovalent ion concentration should be in the range of 50-100 mM. " data-balloon-pos="right" data-balloon-visible data-balloon-length="large"><label for="oligo_concentration"><code > Na <sup>+</sup> Concentration</code></label></span>
                             </p>
                       
                         <div class="field has-addons">

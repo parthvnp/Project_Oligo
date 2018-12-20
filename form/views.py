@@ -56,6 +56,12 @@ def contactMessage(request):
 def contactFail(request):
     return render(request, "form/contact_fail.html")
 
-
 def viewDocs(request):
     return render(request, "form/documentation.html")
+
+def viewTutorial(request):
+    return render(request, "form/tutorial.html")
+
+def viewReferences(request):
+    return render(request, "form/references.html")
+    

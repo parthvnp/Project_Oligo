@@ -10,5 +10,7 @@ urlpatterns = [
     path("contact/message", views.contactMessage, name="contact_message"),
     path("contact/fail", views.contactFail, name="contact_fail"),
     path("documentation/", views.viewDocs, name="docs"),
+    path ("tutorial/", views.viewTutorial, name="tutorial"),
+    path("references/", views.viewReferences, name="references"),
     
 ]

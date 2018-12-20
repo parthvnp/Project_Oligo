@@ -7,9 +7,9 @@ class SequenceForm(forms.Form):
 
     sequence = forms.CharField(required=True, widget=forms.Textarea(attrs={"class": "textarea is-link inputText", "name": "sequence", "placeholder": "A DNA or RNA sequence containing A, T, U , G and C only. All RNA sequences will be converted to DNA."}))
 
-    max_Length = forms.ChoiceField(required=True, choices=choices.SIZE_CHOICES, initial="50", widget=forms.Select(attrs={"name": "maxLength", "class": "inputText", "value": 50}))
+    max_Length = forms.ChoiceField(required=True, choices=choices.SIZE_CHOICES, initial="70", widget=forms.Select(attrs={"name": "maxLength", "class": "inputText", "value": 70}))
 
-    melt_Tm = forms.DecimalField(required=True, widget=forms.TextInput(attrs={"class": "input is-link inputText", "name": "melt_Tm", "value": 55}), min_value=50, max_value=65)
+    melt_Tm = forms.DecimalField(required=True, widget=forms.TextInput(attrs={"class": "input is-link inputText", "name": "melt_Tm", "value": 55}), min_value=-1000000, max_value=200000)
 
     oligo_concentration = forms.FloatField(required=True, widget=forms.TextInput(attrs={ "name": "oligo_concentration" , "class": "input inputText", "value": 0.25}) , min_value=1.0e-12,max_value=100)
 

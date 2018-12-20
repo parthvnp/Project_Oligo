@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'vt&4rm9s(dfn9aip#n$07f5l8f5ak$47304ns*76x@8o&e0+1&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["parth1402.pythonanywhere.com"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -78,16 +78,15 @@ WSGI_APPLICATION = 'PyOligo.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': "Parth1402$pyoligo",
-        "USER": "Parth1402",
-        "PASSWORD": "W3q92BhiYQiuQBu",
-        "HOST": "Parth1402.mysql.pythonanywhere-services.com",
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': "pyoligo",
+        "USER": "postgres",
+        "PASSWORD": "development",
+        "HOST": "localhost",
         "PORT": "",
 
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

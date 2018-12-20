@@ -275,6 +275,10 @@ class EquiTmOligo(object):
             if base not in ACCEPTABLE_BASES:
                 raise CustomExceptions.InvalidSequence
                 break
+
+        if self.sequence_length > 600 or self.sequence_length < 80:
+            raise CustomExceptions.InvalidArgument
+        
         if self.min_oligo_length > self.sequence_length:
             raise CustomExceptions.InvalidLength
 
@@ -283,6 +287,12 @@ class EquiTmOligo(object):
 
         if primers_index.shape[0] < 2:
             raise CustomExceptions.InvalidLength
+        
+        if self.oligo_conc < 0.1e-6 or self.oligo_conc > 0.4e-6:
+            raise CustomExceptions.InvalidConcentration
+        
+        if self.monovalent < 50e-3 or self.monovalent > 100e-3:
+            raise CustomExceptions.InvalidConcentration
 
         oligo_overlaps = []
         if primers_index.shape[0] >= 2:
@@ -523,7 +533,7 @@ class EquiTmOligo(object):
 
         except CustomExceptions.InvalidSequence:
             error_code = "ERROR12: Invalid Sequence"
-            return is_valid, error_code, "The provided sequence is invalid."
+            return is_valid, error_code, "The provided sequence is invalid. The sequence must contain only A, T, C, G or U base pairs. The sequence can contain spaces, tabs or new line characters as they all will be ignored. Note that all RNA sequences will be converted to DNA sequences for designing oligos."
 
         except CustomExceptions.InvalidLength:
             error_code = "ERROR14: Invalid Length"
@@ -531,16 +541,24 @@ class EquiTmOligo(object):
 
         except CustomExceptions.InvalidTemperature:
             error_code = "ERROR32: Invalid Temperature"
-            return is_valid, "The provided temperature is invalid. The temperatue must be between 55 and 70 degree celsius."
+            return is_valid, error_code, "The provided temperature is invalid. The temperatue must be between or including 55 and 70 degree celsius. Try changing the temperature to resolve the issue."
 
         except CustomExceptions.UnexpectedError:
             error_code = "ERROR46: Incompatible Arguments"
-            return is_valid, error_code, "The program was unable to find an output that satisfied the provided parameter."
+            return is_valid, error_code, "The program was unable to find an output that satisfied the provided parameter. This could be due to several reasons. The most common one being insufficient primer length to achieve the desired melt temperature in the overlap region. This can be resolved either by increasing the maximum primer length or lowering the melt temperature."
+
+        except CustomExceptions.InvalidArgument:
+            error_code = "ERROR58: Invalid Sequence Length"
+            return is_valid, error_code, "The sequence length provided is not valid. The maximum acceptable length for the sequence is 600 bp and the minimum acceptable length is 80 bp. "
+        
+        except CustomExceptions.InvalidConcentration:
+            error_code = "ERROR90: Invalid Concentration."
+            return is_valid, error_code, "The concentration of monovalent sodium ion or the oligos was not within the acceptable range. The acceptable range of concentration for monovalent sodium ion is 50-100 mM and 0.1-0.4 \u03BCM for primers."
 
         except Exception as e:
             error_code = "ERROR500: Internal Server Error"
             is_valid = False
-            return  is_valid, error_code, "The server encountered an unexpected error"
+            return  is_valid, error_code, "The server encountered an unexpected error while processing an error. Please contact Philip Johnson at pjohnson@yorku.ca if this error persists. "
 
         else:
             is_valid = True

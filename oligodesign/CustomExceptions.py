@@ -13,5 +13,9 @@ class InvalidTemperature(Exception):
 class InvalidLength(Exception):
     pass
 
+class InvalidConcentration(Exception):
+    pass
+
 class UnexpectedError(Exception):
     pass
+
